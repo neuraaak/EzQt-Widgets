@@ -1,5 +1,27 @@
 # EzQt Widgets – Style Guide
 
+## Sommaire
+
+### **Inputs**
+- [AutoCompleteInput](#1-autocompleteinput)
+- [PasswordInput](#2-passwordinput)
+- [SearchInput](#3-searchinput)
+- [TabReplaceTextEdit](#4-tabreplacetextedit)
+
+### **Labels**
+- [HoverLabel](#5-hoverlabel)
+- [IndicatorLabel](#6-indicatorlabel)
+
+### **Boutons**
+- [DateButton](#7-datebutton)
+- [LoaderButton](#8-loaderbutton)
+- [IconButton](#9-iconbutton)
+
+### **Divers**
+- [Bonnes pratiques](#bonnes-pratiques)
+
+---
+
 Ce document définit les conventions de style (QSS) pour les widgets custom du projet EzQt Widgets.
 
 ## Principes généraux
@@ -10,6 +32,8 @@ Ce document définit les conventions de style (QSS) pour les widgets custom du p
 ---
 
 ## 1. AutoCompleteInput
+
+[⬆️ Retour en haut](#sommaire) 
 
 ### QSS recommandé
 ```css
@@ -40,6 +64,8 @@ AutoCompleteInput:focus {
 ---
 
 ## 2. PasswordInput
+
+[⬆️ Retour en haut](#sommaire) 
 
 ### QSS recommandé
 ```css
@@ -80,6 +106,8 @@ PasswordInput QLineEdit:focus {
 
 ## 3. SearchInput
 
+[⬆️ Retour en haut](#sommaire) 
+
 ### QSS recommandé
 ```css
 /* Widget principal */
@@ -109,6 +137,8 @@ SearchInput:focus {
 ---
 
 ## 4. TabReplaceTextEdit
+
+[⬆️ Retour en haut](#sommaire) 
 
 ### QSS recommandé
 ```css
@@ -143,6 +173,8 @@ TabReplaceTextEdit:focus {
 
 ## 5. HoverLabel
 
+[⬆️ Retour en haut](#sommaire) 
+
 ### QSS recommandé
 ```css
 /* Widget principal */
@@ -161,6 +193,8 @@ HoverLabel {
 
 ## 6. IndicatorLabel
 
+[⬆️ Retour en haut](#sommaire) 
+
 ### QSS recommandé
 ```css
 /* Widget principal */
@@ -177,8 +211,109 @@ IndicatorLabel {
 
 ---
 
+## 7. DateButton
+
+[⬆️ Retour en haut](#sommaire) 
+
+### QSS recommandé
+```css
+/* Widget principal */
+DateButton {
+    background-color: #2d2d2d;
+    border: 1px solid #444444;
+    border-radius: 4px 4px 4px 4px;
+    selection-color: #ffffff;
+    selection-background-color: #0078d4;
+}
+DateButton:hover {
+    background-color: #2d2d2d;
+    border: 1px solid #666666;
+    border-radius: 4px 4px 4px 4px;
+}
+DateButton:focus {
+    background-color: #2d2d2d;
+    border: 1px solid #0078d4;
+    border-radius: 4px 4px 4px 4px;
+}
+```
+
+### Conseils d'intégration
+- Adapter les couleurs selon la charte graphique de votre application.
+- Les propriétés de type sont automatiquement définies dans le code.
+
+---
+
+## 8. LoaderButton
+
+[⬆️ Retour en haut](#sommaire) 
+
+### QSS recommandé
+```css
+/* Widget principal */
+LoaderButton {
+    background-color: #2d2d2d;
+    border: 1px solid #444444;
+    border-radius: 4px 4px 4px 4px;
+    selection-color: #ffffff;
+    selection-background-color: #0078d4;
+}
+LoaderButton:hover {
+    background-color: #2d2d2d;
+    border: 1px solid #666666;
+    border-radius: 4px 4px 4px 4px;
+}
+LoaderButton:focus {
+    background-color: #2d2d2d;
+    border: 1px solid #0078d4;
+    border-radius: 4px 4px 4px 4px;
+}
+```
+
+### Conseils d'intégration
+- Adapter les couleurs selon la charte graphique de votre application.
+- Les propriétés de type sont automatiquement définies dans le code.
+
+--- 
+
+## 9. IconButton
+
+[⬆️ Retour en haut](#sommaire) 
+
+### QSS recommandé
+```css
+/* Widget principal */
+IconButton {
+    background-color: #2d2d2d;
+    border: 1px solid #444444;
+    border-radius: 4px 4px 4px 4px;
+    selection-color: #ffffff;
+    selection-background-color: #0078d4;
+}
+IconButton:hover {
+    background-color: #2d2d2d;
+    border: 1px solid #666666;
+    border-radius: 4px 4px 4px 4px;
+}
+IconButton:focus {
+    background-color: #2d2d2d;
+    border: 1px solid #0078d4;
+    border-radius: 4px 4px 4px 4px;
+}
+```
+
+### Conseils d'intégration
+
+- Adapter les couleurs selon la charte graphique de votre application.
+- Les propriétés de type sont automatiquement définies dans le code.
+
+--- 
+
 ## Bonnes pratiques
+
+[⬆️ Retour en haut](#sommaire) 
+
 - Les propriétés de type sont automatiquement définies dans le code des widgets.
 - Documenter chaque section de QSS dans ce fichier.
 - Tester l'apparence sur différents OS et thèmes Qt.
 - Utiliser des couleurs cohérentes pour la sélection (selection-color et selection-background-color). 
+
