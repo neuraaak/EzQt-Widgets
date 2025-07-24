@@ -13,6 +13,7 @@ from PySide6.QtCore import (
 )
 from PySide6.QtWidgets import (
     QHBoxLayout,
+    QSizePolicy,
     QFrame,
     QLabel,
 )
@@ -107,15 +108,16 @@ class IndicatorLabel(QFrame):
         # Frame setup
         self.setFrameShape(QFrame.NoFrame)
         self.setFrameShadow(QFrame.Raised)
-        self.setContentsMargins(0, 3, 0, 0)
-        self.setFixedHeight(30)
+        self.setContentsMargins(4, 2, 4, 2)
+        self.setFixedHeight(24)
+        self.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         # Layout
         self.status_HLayout = QHBoxLayout(self)
         self.status_HLayout.setObjectName("status_HLayout")
         self.status_HLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.status_HLayout.setContentsMargins(0, 0, 0, 0)
-        self.status_HLayout.setSpacing(12)
+        self.status_HLayout.setSpacing(8)
 
         # Status label
         self.status_label = QLabel(self)
@@ -127,7 +129,7 @@ class IndicatorLabel(QFrame):
         # LED label
         self.status_led = QLabel(self)
         self.status_led.setObjectName("status_led")
-        self.status_led.setFixedSize(QSize(12, 15))
+        self.status_led.setFixedSize(QSize(13, 16))
         self.status_led.setFont(QFont("Segoe UI", 10))
         self.status_led.setLineWidth(0)
         self.status_HLayout.addWidget(self.status_led, 0, Qt.AlignmentFlag.AlignTop)
@@ -162,7 +164,12 @@ class IndicatorLabel(QFrame):
         self.setProperty("state", data["state"])
         # Set LED color (simple background color)
         self.status_led.setStyleSheet(
-            f"background-color: {data['color']}; border-radius: 6px;"
+            f"""
+            background-color: {data['color']};
+            border: 2px solid rgb(66, 66, 66);
+            border-radius: 6px;
+            margin-top: 3px;
+            """
         )
         self._status = status
         self.refresh_style()

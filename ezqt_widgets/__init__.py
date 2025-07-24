@@ -4,7 +4,7 @@
 """
 EzQt_Widgets package initialization.
 """
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 # LABEL WIDGETS
 from .label import *
