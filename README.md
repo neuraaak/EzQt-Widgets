@@ -1,8 +1,8 @@
-# EzQt Widgets
+# EzQt-Widgets
 
 ## Description
 
-EzQt Widgets is a collection of custom Qt widgets designed to enhance applications built with [EzQt-App](https://pypi.org/project/EzQt-App/).
+EzQt-Widgets is a collection of custom Qt widgets designed to enhance applications built with [EzQt-App](https://pypi.org/project/EzQt-App/).
 This module provides advanced, reusable, and stylish graphical components, making it easier to develop modern and user-friendly interfaces.
 
 ## Features
@@ -23,7 +23,7 @@ pip install ezqt_widgets
 Or install locally:
 
 ```bash
-git clone <repository_url>
+git clone https://github.com/neuraaak/ezqt_widgets.git
 cd ezqt_widgets
 pip install .
 ```
@@ -52,7 +52,7 @@ app.exec()
 
 ## Integration with EzQt-App
 
-EzQt Widgets is designed to be seamlessly integrated into any EzQt-App project.
+EzQt-Widgets is designed to be seamlessly integrated into any EzQt-App project.
 Simply import the desired widgets and use them as you would with standard Qt widgets.
 
 ## License

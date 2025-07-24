@@ -1,0 +1,10 @@
+__pycache__
+.vscode
+.venv
+env
+build
+dist
+*.spec
+*.egg-info/
+requirements.txt
+build_upload.bat
