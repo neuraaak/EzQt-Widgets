@@ -19,7 +19,6 @@ from PySide6.QtGui import (
     QPainter,
     QIcon,
 )
-import re
 from PySide6.QtGui import QPixmap, QIcon
 
 # IMPORT / GUI AND MODULES AND WIDGETS

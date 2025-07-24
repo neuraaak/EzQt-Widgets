@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "EzQt_Widgets"
-version = "1.0.2"
+version = "1.0.3"
 description = "A collection of custom Qt widgets to enhance applications built with EzQt-App. This module provides advanced, reusable, and stylish graphical components, making it easier to develop modern and user-friendly interfaces."
 readme = "README.md"
 requires-python = ">=3.9,<3.13"

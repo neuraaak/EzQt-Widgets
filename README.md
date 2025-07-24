@@ -55,6 +55,11 @@ app.exec()
 EzQt-Widgets is designed to be seamlessly integrated into any EzQt-App project.
 Simply import the desired widgets and use them as you would with standard Qt widgets.
 
+## Styling
+
+For consistent styling across your application, refer to the [STYLE_GUIDE.md](STYLE_GUIDE.md) file.
+This guide provides QSS (Qt Style Sheets) examples and best practices for all custom widgets in this library.
+
 ## License
 
 MIT License
