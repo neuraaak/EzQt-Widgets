@@ -57,6 +57,8 @@ class OptionSelector(QFrame):
         Minimum height constraint for the widget (default: None).
     orientation : str, optional
         Layout orientation: "horizontal" or "vertical" (default: "horizontal").
+    animation_duration : int, optional
+        Duration of the selector animation in milliseconds (default: 300).
     parent : QWidget, optional
         The parent widget (default: None).
     *args, **kwargs :
@@ -78,6 +80,8 @@ class OptionSelector(QFrame):
         Get or set the minimum width constraint.
     min_height : int
         Get or set the minimum height constraint.
+    animation_duration : int
+        Get or set the animation duration in milliseconds.
 
     Signals
     -------
@@ -100,6 +104,7 @@ class OptionSelector(QFrame):
         min_width=None,
         min_height=None,
         orientation="horizontal",
+        animation_duration=300,
         parent=None,
         *args,
         **kwargs,
@@ -117,6 +122,7 @@ class OptionSelector(QFrame):
         self._min_width = min_width
         self._min_height = min_height
         self._orientation = orientation.lower()
+        self._animation_duration = animation_duration
 
         # ////// SETUP GRID LAYOUT
         self.grid = QGridLayout(self)
@@ -211,6 +217,16 @@ class OptionSelector(QFrame):
         self._min_height = value
         self.updateGeometry()
 
+    @property
+    def animation_duration(self):
+        """Get or set the animation duration in milliseconds."""
+        return self._animation_duration
+
+    @animation_duration.setter
+    def animation_duration(self, value):
+        """Set the animation duration in milliseconds."""
+        self._animation_duration = value
+
     # UI SETUP FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
@@ -285,7 +301,7 @@ class OptionSelector(QFrame):
 
         # ////// CREATE GEOMETRY ANIMATION
         self._selector_animation = QPropertyAnimation(self.selector, b"geometry")
-        self._selector_animation.setDuration(300)  # 300ms animation
+        self._selector_animation.setDuration(self._animation_duration)  # Custom duration
         self._selector_animation.setStartValue(start_geometry)
         self._selector_animation.setEndValue(end_geometry)
         self._selector_animation.setEasingCurve(QEasingCurve.OutCubic)
