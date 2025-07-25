@@ -8,6 +8,7 @@
 # ///////////////////////////////////////////////////////////////
 from PySide6.QtCore import (
     Qt,
+    QSize,
     Signal,
 )
 from PySide6.QtWidgets import (
@@ -56,6 +57,10 @@ class FramedLabel(QFrame):
         The alignment of the label text (default: Qt.AlignmentFlag.AlignCenter).
     style_sheet : str, optional
         Custom stylesheet to apply to the QFrame (default: None, uses transparent background).
+    min_width : int, optional
+        Minimum width constraint for the widget (default: None).
+    min_height : int, optional
+        Minimum height constraint for the widget (default: None).
     *args, **kwargs :
         Additional arguments passed to QFrame.
 
@@ -65,6 +70,10 @@ class FramedLabel(QFrame):
         Get or set the label text.
     alignment : Qt.AlignmentFlag
         Get or set the label alignment.
+    min_width : int
+        Get or set the minimum width constraint.
+    min_height : int
+        Get or set the minimum height constraint.
 
     Signals
     -------
@@ -83,11 +92,17 @@ class FramedLabel(QFrame):
         parent=None,
         alignment=Qt.AlignmentFlag.AlignCenter,
         style_sheet=None,
+        min_width=None,
+        min_height=None,
         *args,
         **kwargs,
     ) -> None:
         super().__init__(parent, *args, **kwargs)
         self.setProperty("type", "FramedLabel")
+
+        # ////// INITIALIZE MINIMUM SIZE PROPERTIES
+        self._min_width = min_width
+        self._min_height = min_height
 
         # // STYLE SHEET
         self.setStyleSheet(style_sheet or "background-color: transparent;")
@@ -147,8 +162,52 @@ class FramedLabel(QFrame):
             self.layout().setAlignment(value)
         # //////
 
+    @property
+    def min_width(self):
+        """Get or set the minimum width."""
+        return self._min_width
+
+    @min_width.setter
+    def min_width(self, value):
+        """Set the minimum width."""
+        self._min_width = value
+        self.updateGeometry()
+
+    @property
+    def min_height(self):
+        """Get or set the minimum height."""
+        return self._min_height
+
+    @min_height.setter
+    def min_height(self, value):
+        """Set the minimum height."""
+        self._min_height = value
+        self.updateGeometry()
+
     # STYLE FUNCTIONS
     # ///////////////////////////////////////////////////////////////
+
+    def minimumSizeHint(self) -> QSize:
+        """Get the minimum size hint for the widget."""
+        # ////// CALCULATE BASE SIZE
+        base_size = super().minimumSizeHint()
+
+        # ////// CALCULATE TEXT SIZE
+        font_metrics = self.fontMetrics()
+        text_width = font_metrics.horizontalAdvance(self.text)
+        text_height = font_metrics.height()
+
+        # ////// ADD PADDING AND MARGINS
+        content_width = text_width + 16  # 8px padding on each side
+        content_height = text_height + 8  # 4px padding top/bottom
+
+        # ////// APPLY MINIMUM CONSTRAINTS
+        min_width = self._min_width if self._min_width is not None else content_width
+        min_height = (
+            self._min_height if self._min_height is not None else content_height
+        )
+
+        return QSize(max(min_width, content_width), max(min_height, content_height))
 
     def refresh_style(self) -> None:
         """Refresh the widget's style (useful after dynamic stylesheet changes)."""

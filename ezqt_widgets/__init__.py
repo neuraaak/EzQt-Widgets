@@ -4,13 +4,7 @@
 """
 EzQt_Widgets package initialization.
 """
-__version__ = "1.0.4"
-
-# LABEL WIDGETS
-from .label import *
-
-# TOGGLE WIDGETS
-from .toggle import *
+__version__ = "1.0.5"
 
 # BUTTON WIDGETS
 from .button import *
@@ -18,5 +12,8 @@ from .button import *
 # INPUT WIDGETS
 from .input import *
 
-# LOADER WIDGETS
-from .loader import *
+# LABEL WIDGETS
+from .label import *
+
+# MISC WIDGETS
+from .misc import *
