@@ -9,3 +9,6 @@ from .circular_timer import *
 
 # TOGGLE LABEL
 from .toggle_icon import *
+
+# TOGGLE SWITCH
+from .toggle_switch import *

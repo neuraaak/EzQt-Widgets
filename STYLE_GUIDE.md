@@ -19,9 +19,10 @@
 - [IconButton](#iconbutton)
 
 ### **Divers**
-- [ToggleIcon](#toggleicon)
 - [CircularTimer](#circulartimer)
 - [OptionSelector](#optionselector)
+- [ToggleIcon](#toggleicon)
+- [ToggleSwitch](#toggleswitch)
 
 ---
 
@@ -356,29 +357,6 @@ IconButton:focus {
 
 ---
 
-### ToggleIcon
-
-[⬆️ Retour en haut](#sommaire)
-
-<details>
-<summary>Voir le QSS</summary>
-
-```css
-/* Widget principal */
-ToggleIcon {
-    background-color: #2d2d2d;
-    border: none;
-    border-radius: 4px 4px 4px 4px;
-}
-```
-</details>
-
-- Adapter les couleurs selon la charte graphique de votre application.
-- Les propriétés de type sont automatiquement définies dans le code.
-- Le widget utilise soit des icônes personnalisées, soit des triangles dessinés par paintEvent.
-
----
-
 ### CircularTimer
 
 [⬆️ Retour en haut](#sommaire)
@@ -429,6 +407,56 @@ OptionSelector [type="OptionSelector_Selector"] {
 - Adapter les couleurs selon la charte graphique de votre application.
 - Les propriétés de type sont automatiquement définies dans le code.
 - Le sélecteur animé s'adapte automatiquement à l'option sélectionnée.
+
+---
+
+### ToggleIcon
+
+[⬆️ Retour en haut](#sommaire)
+
+<details>
+<summary>Voir le QSS</summary>
+
+```css
+/* Widget principal */
+ToggleIcon {
+    background-color: #2d2d2d;
+    border: none;
+    border-radius: 4px 4px 4px 4px;
+}
+```
+</details>
+
+- Adapter les couleurs selon la charte graphique de votre application.
+- Les propriétés de type sont automatiquement définies dans le code.
+- Le widget utilise soit des icônes personnalisées, soit des triangles dessinés par paintEvent.
+
+---
+
+### ToggleSwitch
+
+[⬆️ Retour en haut](#sommaire)
+
+<details>
+<summary>Voir le QSS</summary>
+
+```css
+/* Widget principal */
+ToggleSwitch {
+	background-color: $_main_border;
+	border: 2px solid $_accent_color1;
+	border-radius: 12px;
+}
+
+ToggleSwitch:hover {
+	border: 2px solid $_accent_color4;
+}
+```
+</details>
+
+- Adapter les couleurs selon la charte graphique de votre application.
+- Les propriétés de type sont automatiquement définies dans le code.
+- Le widget utilise des variables CSS pour les couleurs ($_main_border, $_accent_color1, $_accent_color4).
 
 ---
 
