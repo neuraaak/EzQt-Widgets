@@ -41,16 +41,17 @@ class OptionSelector(QFrame):
         - Multiple selectable options displayed as labels
         - Animated selector that moves between options
         - Single selection mode (radio behavior)
-        - Configurable default selection
+        - Configurable default selection by ID (index)
         - Smooth animations with easing curves
         - Click events for option selection
+        - Uses IDs internally for robust value handling
 
     Parameters
     ----------
     items : List[str]
         List of option texts to display.
-    default : str, optional
-        Default selected option (default: "").
+    default_id : int, optional
+        Default selected option ID (index) (default: 0).
     min_width : int, optional
         Minimum width constraint for the widget (default: None).
     min_height : int, optional
@@ -67,11 +68,13 @@ class OptionSelector(QFrame):
     Properties
     ----------
     value : str
-        Get or set the currently selected option.
+        Get or set the currently selected option text.
+    value_id : int
+        Get or set the currently selected option ID.
     options : List[str]
         Get the list of available options.
-    default : str
-        Get or set the default option.
+    default_id : int
+        Get or set the default option ID.
     selected_option : FramedLabel
         Get the currently selected option widget.
     orientation : str
@@ -89,10 +92,13 @@ class OptionSelector(QFrame):
         Emitted when an option is clicked.
     valueChanged(str)
         Emitted when the selected value changes.
+    valueIdChanged(int)
+        Emitted when the selected value ID changes.
     """
 
     clicked = Signal()
     valueChanged = Signal(str)
+    valueIdChanged = Signal(int)
 
     # INITIALIZATION
     # ///////////////////////////////////////////////////////////////
@@ -100,7 +106,7 @@ class OptionSelector(QFrame):
     def __init__(
         self,
         items: List[str],
-        default: str = "",
+        default_id: int = 0,
         min_width=None,
         min_height=None,
         orientation="horizontal",
@@ -114,10 +120,10 @@ class OptionSelector(QFrame):
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         # ////// INITIALIZE VARIABLES
-        self._value = ""
+        self._value_id = 0
         self._options_list = items
-        self._default = default
-        self._options: Dict[str, FramedLabel] = {}
+        self._default_id = default_id
+        self._options: Dict[int, FramedLabel] = {}  # Changed to use int keys
         self._selector_animation = None
         self._min_width = min_width
         self._min_height = min_height
@@ -137,29 +143,46 @@ class OptionSelector(QFrame):
         self.selector.setProperty("type", "OptionSelector_Selector")
 
         # ////// ADD OPTIONS
-        for option in self._options_list:
-            self.add_option(option_text=option)
+        for i, option_text in enumerate(self._options_list):
+            self.add_option(option_id=i, option_text=option_text)
 
         # ////// INITIALIZE SELECTOR
         if self._options_list:
-            self.initialize_selector(self._default or self._options_list[0])
+            self.initialize_selector(self._default_id)
 
     # PROPERTY FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
     @property
     def value(self) -> str:
-        """Get or set the currently selected option."""
-        return self._value
+        """Get or set the currently selected option text."""
+        if 0 <= self._value_id < len(self._options_list):
+            return self._options_list[self._value_id]
+        return ""
 
     @value.setter
     def value(self, new_value: str) -> None:
-        """Set the selected option."""
-        if new_value in self._options_list and new_value != self._value:
-            self._value = new_value
-            if new_value in self._options:
-                self.move_selector(self._options[new_value])
-            self.valueChanged.emit(new_value)
+        """Set the selected option by text."""
+        try:
+            new_id = self._options_list.index(new_value)
+            self.value_id = new_id
+        except ValueError:
+            pass  # Value not found in list
+
+    @property
+    def value_id(self) -> int:
+        """Get or set the currently selected option ID."""
+        return self._value_id
+
+    @value_id.setter
+    def value_id(self, new_id: int) -> None:
+        """Set the selected option by ID."""
+        if 0 <= new_id < len(self._options_list) and new_id != self._value_id:
+            self._value_id = new_id
+            if new_id in self._options:
+                self.move_selector(self._options[new_id])
+            self.valueChanged.emit(self.value)
+            self.valueIdChanged.emit(new_id)
 
     @property
     def options(self) -> List[str]:
@@ -167,21 +190,22 @@ class OptionSelector(QFrame):
         return self._options_list.copy()
 
     @property
-    def default(self) -> str:
-        """Get or set the default option."""
-        return self._default
+    def default_id(self) -> int:
+        """Get or set the default option ID."""
+        return self._default_id
 
-    @default.setter
-    def default(self, value: str) -> None:
-        """Set the default option."""
-        self._default = value
-        if value in self._options_list and not self._value:
-            self.value = value
+    @default_id.setter
+    def default_id(self, value: int) -> None:
+        """Set the default option ID."""
+        if 0 <= value < len(self._options_list):
+            self._default_id = value
+            if not self._value_id and self._options_list:
+                self.value_id = value
 
     @property
     def selected_option(self) -> Optional[FramedLabel]:
         """Get the currently selected option widget."""
-        return self._options.get(self._value)
+        return self._options.get(self._value_id)
 
     @property
     def orientation(self) -> str:
@@ -230,20 +254,15 @@ class OptionSelector(QFrame):
     # UI SETUP FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
-    def initialize_selector(self, default: str = "") -> None:
+    def initialize_selector(self, default_id: int = 0) -> None:
         """Initialize the selector with default position."""
-        self._default = default
-
-        if self._options:
-            # ////// GET DEFAULT OPTION
-            first_option_key = next(iter(self._options_list), None)
-            selected_option = self._options.get(
-                self._default.capitalize(), self._options.get(first_option_key)
-            )
+        if 0 <= default_id < len(self._options_list):
+            self._default_id = default_id
+            selected_option = self._options.get(default_id)
 
             if selected_option:
                 # ////// SET INITIAL VALUE
-                self._value = selected_option.label.text()
+                self._value_id = default_id
 
                 # ////// POSITION SELECTOR
                 default_pos = self.grid.indexOf(selected_option)
@@ -251,11 +270,11 @@ class OptionSelector(QFrame):
                 self.selector.lower()  # Ensure selector stays below
                 self.selector.update()  # Force refresh if needed
 
-    def add_option(self, option_text: str) -> None:
+    def add_option(self, option_id: int, option_text: str) -> None:
         """Add a new option to the toggle radio."""
         # ////// CREATE OPTION LABEL
-        option = FramedLabel(option_text, self)
-        option.setObjectName(f"opt_{option_text}")
+        option = FramedLabel(option_text.capitalize(), self)  # Capitalize for display
+        option.setObjectName(f"opt_{option_id}")
         option.setFrameShape(QFrame.NoFrame)
         option.setFrameShadow(QFrame.Raised)
         option.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -269,29 +288,28 @@ class OptionSelector(QFrame):
             self.grid.addWidget(option, option_index, 0)
 
         # ////// SETUP CLICK HANDLER
-        option.mousePressEvent = lambda event, option=option: self.toggle_selection(
-            option
+        option.mousePressEvent = (
+            lambda event, option_id=option_id: self.toggle_selection(option_id)
         )
 
         # ////// STORE OPTION
-        self._options[option_text] = option
+        self._options[option_id] = option
 
     # UTILITY FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
     def get_value_option(self) -> Optional[FramedLabel]:
         """Get the currently selected option widget."""
-        return self._options.get(self._value)
+        return self._options.get(self._value_id)
 
-    def toggle_selection(self, option: FramedLabel) -> None:
+    def toggle_selection(self, option_id: int) -> None:
         """Handle option selection."""
-        new_value = option.label.text()
-
-        if new_value != self._value:
-            self._value = new_value
+        if option_id != self._value_id:
+            self._value_id = option_id
             self.clicked.emit()
-            self.valueChanged.emit(new_value)
-            self.move_selector(option)
+            self.valueChanged.emit(self.value)
+            self.valueIdChanged.emit(option_id)
+            self.move_selector(self._options[option_id])
 
     def move_selector(self, option: FramedLabel) -> None:
         """Animate the selector to the selected option."""
@@ -301,7 +319,9 @@ class OptionSelector(QFrame):
 
         # ////// CREATE GEOMETRY ANIMATION
         self._selector_animation = QPropertyAnimation(self.selector, b"geometry")
-        self._selector_animation.setDuration(self._animation_duration)  # Custom duration
+        self._selector_animation.setDuration(
+            self._animation_duration
+        )  # Custom duration
         self._selector_animation.setStartValue(start_geometry)
         self._selector_animation.setEndValue(end_geometry)
         self._selector_animation.setEasingCurve(QEasingCurve.OutCubic)
@@ -329,9 +349,9 @@ class OptionSelector(QFrame):
         max_option_height = 0
 
         for option_text in self._options_list:
-            # Estimate text width using font metrics
+            # Estimate text width using font metrics (use capitalized text for display)
             font_metrics = self.fontMetrics()
-            text_width = font_metrics.horizontalAdvance(option_text)
+            text_width = font_metrics.horizontalAdvance(option_text.capitalize())
 
             # Add padding and margins
             option_width = text_width + 16  # 8px padding on each side
@@ -346,7 +366,7 @@ class OptionSelector(QFrame):
             total_width = 0
             for option_text in self._options_list:
                 font_metrics = self.fontMetrics()
-                text_width = font_metrics.horizontalAdvance(option_text)
+                text_width = font_metrics.horizontalAdvance(option_text.capitalize())
                 option_width = text_width + 16  # 8px padding on each side
                 total_width += option_width
             total_width += (len(self._options_list) - 1) * self.grid.spacing()
