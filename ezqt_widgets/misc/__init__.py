@@ -12,3 +12,6 @@ from .toggle_icon import *
 
 # TOGGLE SWITCH
 from .toggle_switch import *
+
+# DRAGGABLE LIST
+from .draggable_list import *

@@ -1,112 +1,96 @@
-# 🚀 Guide de démarrage rapide - Tests EzQt_Widgets
+# Quick Start Tests - EzQt Widgets
 
-## ✅ Vérification rapide
+## Quick Verification
 
-Pour vérifier que tout fonctionne :
-
-```bash
-python run_tests.py --type unit
-```
-
-## 🧪 Exécution des tests
-
-### **Méthode 1 : Script personnalisé (recommandé)**
+### Essential Commands
 
 ```bash
-# Tests unitaires
-python run_tests.py --type unit
+# Quick verification
+python tests/run_tests.py --type unit
 
-# Tests avec couverture
-python run_tests.py --coverage
+# With coverage
+python tests/run_tests.py --coverage
 
-# Mode verbeux
-python run_tests.py --verbose
-
-# Exclure les tests lents
-python run_tests.py --fast
+# Verbose mode
+python tests/run_tests.py --verbose
 ```
 
-### **Méthode 2 : Pytest direct**
+### Direct pytest Execution
 
 ```bash
-# Tests simples
-python -m pytest tests/test_simple.py -v
+# Unit tests only
+pytest -m unit
 
-# Tests unitaires
-python -m pytest tests/unit/ -v
+# With coverage
+pytest --cov=ezqt_widgets --cov-report=html
 
-# Tests spécifiques
-python -m pytest tests/unit/test_button/test_icon_button.py -v
-
-# Avec couverture
-python -m pytest --cov=ezqt_widgets --cov-report=html
+# Specific test file
+pytest tests/unit/test_button/test_icon_button.py -v
 ```
 
-## 📊 Résultats attendus
+## Expected Results
 
-### **Tests unitaires réussis :**
-```
-============================= test session starts =============================
-collected 17 items
+### Quick Verification
+- **Status** : 🟢 All tests passing
+- **Total** : ~246 tests
+- **Coverage** : ~75%
+- **Duration** : < 30 seconds
 
-tests/unit/test_button/test_icon_button.py::TestColorizePixmap::test_colorize_pixmap_basic PASSED
-tests/unit/test_button/test_icon_button.py::TestColorizePixmap::test_colorize_pixmap_transparent PASSED
-...
-===================================== 16 passed, 1 skipped in 2.34s ======================================
-```
+### Common Issues
 
-### **Tests unitaires :**
-```
-============================= test session starts =============================
-collected 17 items
-
-tests/unit/test_button/test_icon_button.py::TestColorizePixmap::test_colorize_pixmap_basic PASSED
-tests/unit/test_button/test_icon_button.py::TestColorizePixmap::test_colorize_pixmap_transparent PASSED
-...
-===================================== 17 passed in 5.23s ======================================
+#### QApplication Already Created
+```python
+# Use the qt_application fixture
+def test_widget(qt_application):
+    pass
 ```
 
-## 🔧 Dépannage
+#### Random Test Failures
+- Add delays with `QTimer`
+- Use `wait_for_signal`
+- Check test isolation
 
-### **Erreur "QGuiApplication before QPixmap"**
-- ✅ **Résolu** : Les fixtures Qt sont configurées dans `conftest.py`
+#### Memory Leaks
+- Use `qt_widget_cleanup`
+- Delete widgets explicitly
+- Check signal connections
 
-### **Erreur d'import**
-```bash
-pip install -e .
-```
-
-### **Erreur de dépendances**
-```bash
-pip install pytest pytest-qt pytest-cov
-```
-
-### **Tests qui s'arrêtent**
-- Vérifiez que PySide6 est installé
-- Consultez les logs pytest pour plus de détails
-
-## 📁 Structure des tests
+## Test Structure
 
 ```
 tests/
-├── run_tests.py                # Run des tests
-├── conftest.py                 # Configuration pytest
-├── unit/                       # Tests unitaires
-│   └── test_button/
-│       └── test_icon_button.py # Tests IconButton
-└── README.md                   # Documentation complète
+├── conftest.py                    # Pytest configuration and fixtures
+├── run_tests.py                   # Test execution script
+└── unit/                          # Unit tests
+    ├── test_button/               # Button widget tests
+    ├── test_input/                # Input widget tests
+    ├── test_label/                # Label widget tests
+    └── test_misc/                 # Misc widget tests
 ```
 
-## 🎯 Prochaines étapes
+## Troubleshooting
 
-1. **Ajouter des tests** pour les autres widgets
-2. **Créer des tests d'intégration**
-3. **Configurer l'intégration continue**
-4. **Améliorer la couverture de code**
+### Installation Issues
+```bash
+# Install in development mode
+pip install -e ".[dev]"
 
-## 📞 Support
+# Install test dependencies
+pip install pytest pytest-qt pytest-cov
+```
 
-Si vous rencontrez des problèmes :
-1. Exécutez `python run_tests.py --type unit`
-2. Vérifiez les dépendances
-3. Consultez `tests/README.md` pour plus de détails 
+### Test Execution Issues
+```bash
+# Debug mode
+pytest --pdb
+
+# Show prints
+pytest -s
+
+# Specific test
+pytest -k "test_icon_button"
+```
+
+---
+
+**Quick Start Tests** - Essential commands and troubleshooting for EzQt Widgets testing. 

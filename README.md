@@ -1,6 +1,10 @@
-# 🎨 EzQt_Widgets
+# 🎨 EzQt Widgets
 
-Une collection de widgets Qt personnalisés et réutilisables pour PySide6.
+[![Repository](https://img.shields.io/badge/Repository-GitHub-blue?style=for-the-badge&logo=github)](https://github.com/your-username/ezqt_widgets)
+[![PyPI](https://img.shields.io/badge/PyPI-ezqt_widgets-green?style=for-the-badge&logo=pypi)](https://pypi.org/project/ezqt-widgets/)
+[![Tests](https://img.shields.io/badge/Tests-254%2F262%20passing-green?style=for-the-badge&logo=pytest)](https://github.com/your-username/ezqt_widgets/actions)
+
+A collection of custom and reusable Qt widgets for PySide6, designed to simplify the development of modern and intuitive graphical interfaces.
 
 ## 📦 **Installation**
 
@@ -8,127 +12,141 @@ Une collection de widgets Qt personnalisés et réutilisables pour PySide6.
 pip install ezqt_widgets
 ```
 
-## 🚀 **Utilisation Rapide**
+## 🚀 **Quick Start**
 
 ```python
-from PySide6.QtWidgets import QApplication
-from ezqt_widgets.button import IconButton, DateButton, LoaderButton
-from ezqt_widgets.label import ClickableTagLabel, FramedLabel, HoverLabel, IndicatorLabel
-from ezqt_widgets.input import AutoCompleteInput, SearchInput, PasswordInput
-from ezqt_widgets.misc import CircularTimer, OptionSelector, ToggleIcon, ToggleSwitch
+from PySide6.QtWidgets import QApplication, QVBoxLayout, QWidget
+from ezqt_widgets.button import DateButton
+from ezqt_widgets.input import PasswordInput
+from ezqt_widgets.misc import ToggleSwitch
 
 app = QApplication([])
+window = QWidget()
+layout = QVBoxLayout()
 
-# Widgets bouton
-icon_btn = IconButton(icon="path/to/icon.png", text="Mon Bouton")
-date_btn = DateButton(date="2024-01-01")
-loader_btn = LoaderButton(text="Charger...")
+# Create widgets
+date_button = DateButton(placeholder="Select a date")
+password_input = PasswordInput(show_strength=True)
+toggle = ToggleSwitch(checked=True)
 
-# Widgets label
-tag_label = ClickableTagLabel(name="Tag Cliquable")
-framed_label = FramedLabel(text="Label Encadré")
-hover_label = HoverLabel(text="Label avec Hover")
-indicator_label = IndicatorLabel(status="online")
+# Add to layout
+layout.addWidget(date_button)
+layout.addWidget(password_input)
+layout.addWidget(toggle)
 
-# Widgets input
-search_input = SearchInput(placeholder="Rechercher...")
-password_input = PasswordInput(placeholder="Mot de passe")
-
-# Widgets misc
-timer = CircularTimer(duration=60)
-toggle_switch = ToggleSwitch(checked=True)
-
+window.setLayout(layout)
+window.show()
 app.exec()
 ```
 
 ## 📚 **Documentation**
 
-- **Documentation complète** : [docs/](docs/)
-- **Guide de style** : [docs/STYLE_GUIDE.md](docs/STYLE_GUIDE.md)
-- **Changelog** : [docs/CHANGELOG.md](docs/CHANGELOG.md)
+- **[📖 Complete Documentation](docs/README.md)** - Main documentation guide
+- **[🎯 Widgets API](docs/api/WIDGETS_DOCUMENTATION.md)** - Complete documentation of all widgets
+- **[🎨 Style Guide](docs/api/STYLE_GUIDE.md)** - QSS customization and best practices
+- **[🧪 Tests](docs/tests/README.md)** - Test documentation and execution guide
+- **[🖥️ CLI Documentation](docs/cli/README.md)** - Command-line interface guide
+- **[📋 Changelog](CHANGELOG.md)** - Version history
+
+## 🎯 **Available Widgets**
+
+### 🎛️ **Buttons (3 widgets)**
+- **DateButton** - Date picker with integrated calendar
+- **IconButton** - Button with icon support and optional text
+- **LoaderButton** - Button with integrated loading animation
+
+### ⌨️ **Inputs (4 widgets)**
+- **AutoCompleteInput** - Text field with autocompletion
+- **PasswordInput** - Password field with strength indicator
+- **SearchInput** - Search field with history
+- **TabReplaceTextEdit** - Text editor with tab replacement
+
+### 🏷️ **Labels (4 widgets)**
+- **ClickableTagLabel** - Clickable tag with toggle state
+- **FramedLabel** - Framed label for advanced styling
+- **HoverLabel** - Label with hover icon
+- **IndicatorLabel** - Status indicator with colored LED
+
+### 🔧 **Misc (5 widgets)**
+- **CircularTimer** - Animated circular timer
+- **DraggableList** - List with draggable elements
+- **OptionSelector** - Option selector with animation
+- **ToggleIcon** - Toggleable icon open/closed
+- **ToggleSwitch** - Modern toggle switch with animation
+
+## ✨ **Features**
+
+- **✅ PySide6 Compatibility** - All widgets based on PySide6
+- **✅ Type Hints** - Complete type annotation support
+- **✅ Qt Signals** - Native integration with Qt signal system
+- **✅ QSS Styles** - Complete Qt stylesheet support
+- **✅ Accessibility** - Accessibility features support
+- **✅ Animations** - Smooth and configurable animations
+- **✅ Tests** - Complete test suite (~246 tests, ~75% coverage)
 
 ## 🧪 **Tests**
 
-### **Exécution des Tests**
+### **Quick Execution**
 ```bash
-# Tous les tests
+# Quick verification
 python tests/run_tests.py --type unit
 
-# Tests spécifiques
-python -m pytest tests/unit/test_button/ -v
-python -m pytest tests/unit/test_label/ -v
+# Tests with coverage
+python tests/run_tests.py --coverage
+
+# Or use CLI (after pip install -e ".[dev]")
+ezqt test --unit
+ezqt test --coverage
 ```
 
-### **Documentation des Tests**
-- **Guide rapide** : [docs/QUICK_START_TESTS.md](docs/QUICK_START_TESTS.md)
-- **Documentation complète** : [docs/tests/](docs/tests/)
+### **Test Documentation**
+- **[🚀 Quick Start Guide](docs/tests/QUICK_START_TESTS.md)** - Quick verification
+- **[📖 Complete Documentation](docs/tests/TESTS_DOCUMENTATION.md)** - Detailed guide
 
-## 📊 **Statistiques des Tests**
+### **Statistics**
+- **Total** : ~246 tests
+- **Coverage** : ~75%
+- **Status** : 🟢 **OPERATIONAL**
 
-- **Widgets Bouton** : 59 tests (56 passent, 3 skipped)
-- **Widgets Label** : 70 tests (67 passent, 3 skipped)
-- **Widgets Input** : 112 tests (111 passent, 1 skipped)
-- **Widgets Misc** : 41 tests ✅
-- **Tests de Base** : 3 tests ✅
-- **Total** : 262 tests (254 passent, 8 skipped)
+## 🔧 **Development**
 
-## 🎯 **Widgets Disponibles**
-
-### **Boutons**
-- `IconButton` - Bouton avec icône personnalisable
-- `DateButton` - Sélecteur de date avec calendrier
-- `LoaderButton` - Bouton avec états de chargement
-
-### **Labels**
-- `ClickableTagLabel` - Tag cliquable avec toggle
-- `FramedLabel` - Label avec cadre personnalisable
-- `HoverLabel` - Label avec effets au survol
-- `IndicatorLabel` - Indicateur de statut avec LED
-
-### **Inputs**
-- `AutoCompleteInput` - Champ de saisie avec autocomplétion
-- `SearchInput` - Champ de recherche avec historique
-- `TabReplaceTextEdit` - Éditeur de texte avec remplacement de tabulations
-- `PasswordInput` - Champ de mot de passe avec barre de force
-
-### **Misc**
-- `CircularTimer` - Timer circulaire avec animation
-- `OptionSelector` - Sélecteur d'options avec interface moderne
-- `ToggleIcon` - Icône basculante avec états multiples
-- `ToggleSwitch` - Interrupteur moderne avec animation
-
-## 🔧 **Développement**
-
-### **Structure du Projet**
+### **Project Structure**
 ```
 ezqt_widgets/
-├── README.md              # Ce fichier
-├── docs/                  # Documentation
-│   ├── README.md         # Index de documentation
-│   ├── STYLE_GUIDE.md    # Guide de style
-│   ├── CHANGELOG.md      # Historique des versions
-│   ├── QUICK_START_TESTS.md # Guide rapide des tests
-│   └── tests/            # Documentation des tests
-├── tests/                # Tests
-│   ├── run_tests.py      # Script d'exécution des tests
-│   ├── conftest.py       # Configuration pytest
-│   └── unit/             # Tests unitaires
-├── ezqt_widgets/         # Code source
-└── pyproject.toml        # Configuration du projet
+├── README.md                    # This file
+├── docs/                        # Documentation
+│   ├── README.md               # Documentation index
+│   ├── api/                    # API documentation
+│   │   ├── README.md          # Navigation guide
+│   │   ├── WIDGETS_DOCUMENTATION.md # Complete documentation
+│   │   └── STYLE_GUIDE.md     # Style guide
+│   └── tests/                  # Test documentation
+│       ├── README.md          # Navigation guide
+│       ├── TESTS_DOCUMENTATION.md # Complete documentation
+│       └── QUICK_START_TESTS.md # Quick start guide
+├── tests/                       # Tests
+│   ├── run_tests.py           # Test execution script
+│   ├── conftest.py            # Pytest configuration
+│   └── unit/                  # Unit tests
+├── ezqt_widgets/               # Source code
+└── pyproject.toml              # Project configuration
 ```
 
-### **Installation pour Développement**
+### **Development Installation**
 ```bash
-git clone <repository>
+git clone https://github.com/your-username/ezqt_widgets.git
 cd ezqt_widgets
-pip install -e .
 pip install -e ".[dev]"
+
+# Verify CLI installation
+ezqt --version
+ezqt info
 ```
 
-## 📄 **Licence**
+## 📄 **License**
 
-Ce projet est sous licence MIT. Voir [LICENSE](LICENSE) pour plus de détails.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-**État des tests :** 🟢 **OPÉRATIONNEL** (254/262 tests passent, 8 skipped)
+**EzQt Widgets** - Simplify the development of modern and intuitive Qt interfaces.

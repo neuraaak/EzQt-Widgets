@@ -1,202 +1,77 @@
-# Tests Unitaires - EzQt_Widgets
+# Tests - EzQt Widgets
 
-## 📋 Vue d'ensemble
+## Overview
 
-Ce répertoire contient tous les tests unitaires pour le projet EzQt_Widgets. Les tests sont organisés de manière modulaire pour correspondre à la structure du code source.
+This directory contains the complete test documentation for the EzQt Widgets library. The documentation is organized in a modular way to facilitate navigation and usage.
 
-## 🏗️ Structure
+## Documentation Structure
 
-```
-tests/
-├── conftest.py                    # Configuration pytest et fixtures
-├── unit/                          # Tests unitaires
-│   ├── test_button/               # Tests des widgets bouton
-│   ├── test_input/                # Tests des widgets input
-│   ├── test_label/                # Tests des widgets label
-│   └── test_misc/                 # Tests des widgets divers
-└── integration/                   # Tests d'intégration (optionnel)
-```
+### 📋 Main Documentation
+- **[TESTS_DOCUMENTATION.md](TESTS_DOCUMENTATION.md)** - Complete documentation of all tests
+  - Overview of all test modules
+  - Detailed documentation of each tested widget
+  - Statistics, coverage and best practices
+  - Execution guide and troubleshooting
 
-## 🚀 Exécution des tests
+### 🚀 Quick Start Guide
+- **[QUICK_START_TESTS.md](QUICK_START_TESTS.md)** - Quick start guide
+  - Essential commands to get started
+  - Quick functionality verification
+  - Common problem troubleshooting
 
-### Installation des dépendances
+## Quick Navigation
 
-```bash
-pip install -e ".[dev]"
-```
+### 🧪 Tests by Module
 
-### Lancement rapide
+#### Buttons (`test_button/`)
+- **DateButton** : 20 tests - Date selection with calendar
+- **IconButton** : 17 tests - Button with advanced icon management
+- **LoaderButton** : 22 tests - Button with loading states
 
-```bash
-# Tous les tests
-python run_tests.py
+#### Inputs (`test_input/`)
+- **AutoCompleteInput** : 17 tests - Field with autocompletion
+- **PasswordInput** : 35 tests - Password field with strength indicator
+- **SearchInput** : 20 tests - Search field with history
+- **TabReplaceTextEdit** : 25 tests - Editor with tab replacement
 
-# Tests unitaires uniquement
-python run_tests.py --type unit
+#### Labels (`test_label/`)
+- **ClickableTagLabel** : Tests for clickable tag
+- **FramedLabel** : Tests for framed label
+- **HoverLabel** : Tests for label with hover
+- **IndicatorLabel** : Tests for status indicator
 
-# Tests avec couverture
-python run_tests.py --coverage
+#### Misc (`test_misc/`)
+- **CircularTimer** : Tests for circular timer
+- **DraggableList** : Tests for draggable list
+- **OptionSelector** : Tests for option selector
+- **ToggleIcon** : Tests for toggleable icon
+- **ToggleSwitch** : Tests for modern toggle switch
 
-# Mode verbeux
-python run_tests.py --verbose
+## Usage
 
-# Exclure les tests lents
-python run_tests.py --fast
-```
+### 🔍 How to Navigate
+1. **Start with** `QUICK_START_TESTS.md` for a quick verification
+2. **Consult** `TESTS_DOCUMENTATION.md` for complete documentation
+3. **Use** the table of contents to access tests directly
 
-### Avec pytest directement
+### 📚 Recommended Reading Order
+- **Beginners** : Quick start → Complete documentation → Specific tests
+- **Experienced users** : Complete documentation → Statistics → Best practices
+- **Maintainers** : Test structure → Coverage → Continuous integration
 
-```bash
-# Tests unitaires
-pytest -m unit
+## Useful Links
 
-# Tests d'intégration
-pytest -m integration
+### 📖 General Documentation
+- **[../README.md](../README.md)** - Main documentation guide
 
-# Avec couverture
-pytest --cov=ezqt_widgets --cov-report=html
+### 🧪 Tests and Examples
+- **[../api/](../api/)** - API documentation
+- **[../examples/](../examples/)** - Complete usage examples
 
-# Tests spécifiques
-pytest tests/unit/test_button/test_icon_button.py
-```
+### 🔗 External Resources
+- **Source code** : `../../ezqt_widgets/` - Widget implementation
+- **Tests** : `../../tests/` - Unit and integration tests
 
-## 🧪 Types de tests
+---
 
-### Tests unitaires (`@pytest.mark.unit`)
-
-- **Objectif** : Tester chaque composant individuellement
-- **Portée** : Fonctions, classes, méthodes
-- **Isolation** : Utilisation de mocks et fixtures
-- **Vitesse** : Rapides (< 1 seconde par test)
-
-### Tests d'intégration (`@pytest.mark.integration`)
-
-- **Objectif** : Tester l'interaction entre composants
-- **Portée** : Widgets dans une interface
-- **Isolation** : Interface Qt complète
-- **Vitesse** : Plus lents (1-5 secondes par test)
-
-### Tests lents (`@pytest.mark.slow`)
-
-- **Objectif** : Tests nécessitant du temps (réseau, fichiers)
-- **Exclusion** : `pytest -m "not slow"`
-
-## 🔧 Fixtures disponibles
-
-### `qt_application`
-Instance QApplication partagée pour tous les tests.
-
-### `qt_widget_cleanup`
-Nettoie automatiquement les widgets après chaque test.
-
-### `wait_for_signal`
-Attend qu'un signal Qt soit émis avec timeout.
-
-### `mock_icon_path`
-Chemin vers un fichier d'icône temporaire.
-
-### `mock_svg_path`
-Chemin vers un fichier SVG temporaire.
-
-## 📊 Couverture de code
-
-La couverture est générée automatiquement avec :
-- Rapport terminal : `--cov-report=term-missing`
-- Rapport HTML : `--cov-report=html:htmlcov`
-- Rapport XML : `--cov-report=xml`
-
-## 🎯 Bonnes pratiques
-
-### 1. Nommage des tests
-```python
-def test_widget_creation_default():
-    """Test de création avec paramètres par défaut."""
-    pass
-
-def test_widget_property_setter():
-    """Test du setter de propriété."""
-    pass
-```
-
-### 2. Organisation des classes de test
-```python
-class TestWidgetName:
-    """Tests pour la classe WidgetName."""
-    
-    def test_method_name_scenario(self):
-        """Test de la méthode dans un scénario spécifique."""
-        pass
-```
-
-### 3. Utilisation des fixtures
-```python
-def test_widget_creation(self, qt_widget_cleanup, mock_icon_path):
-    """Test avec fixtures."""
-    widget = Widget(icon=mock_icon_path)
-    assert widget.icon is not None
-```
-
-### 4. Tests de signaux
-```python
-def test_signal_emission(self, qt_widget_cleanup, wait_for_signal):
-    """Test d'émission de signal."""
-    widget = Widget()
-    assert wait_for_signal(widget.someSignal)
-```
-
-## 🐛 Débogage
-
-### Mode debug
-```bash
-pytest --pdb
-```
-
-### Affichage des prints
-```bash
-pytest -s
-```
-
-### Tests spécifiques
-```bash
-pytest -k "test_icon_button"
-```
-
-## 📈 Métriques
-
-- **Couverture cible** : > 90%
-- **Temps d'exécution** : < 30 secondes pour tous les tests
-- **Fiabilité** : 0% de tests flaky
-
-## 🔄 Intégration continue
-
-Les tests sont automatiquement exécutés :
-- À chaque commit
-- Avant chaque merge
-- Avant chaque release
-
-## 📝 Ajout de nouveaux tests
-
-1. Créer le fichier de test dans le bon répertoire
-2. Suivre la convention de nommage
-3. Utiliser les fixtures appropriées
-4. Ajouter les marqueurs nécessaires
-5. Vérifier la couverture
-
-## 🚨 Problèmes courants
-
-### QApplication déjà créée
-```python
-# Utiliser la fixture qt_application
-def test_widget(app):
-    pass
-```
-
-### Tests qui échouent aléatoirement
-- Ajouter des délais avec `QTimer`
-- Utiliser `wait_for_signal`
-- Vérifier l'isolation des tests
-
-### Mémoire qui fuit
-- Utiliser `qt_widget_cleanup`
-- Supprimer explicitement les widgets
-- Vérifier les connexions de signaux 
+**EzQt Widgets Test Documentation** - Complete and consolidated guide for test execution and maintenance. 

@@ -1,6 +1,6 @@
 # EzQt Widgets – Style Guide
 
-## Sommaire
+## Summary
 
 ### **Inputs**
 - [AutoCompleteInput](#autocompleteinput)
@@ -13,36 +13,37 @@
 - [HoverLabel](#hoverlabel)
 - [IndicatorLabel](#indicatorlabel)
 
-### **Boutons**
+### **Buttons**
 - [DateButton](#datebutton)
 - [LoaderButton](#loaderbutton)
 - [IconButton](#iconbutton)
 
-### **Divers**
+### **Misc**
 - [CircularTimer](#circulartimer)
+- [DraggableList](#draggablelist)
 - [OptionSelector](#optionselector)
 - [ToggleIcon](#toggleicon)
 - [ToggleSwitch](#toggleswitch)
 
 ---
 
-Ce document définit les conventions de style (QSS) pour les widgets custom du projet EzQt Widgets.
+This document defines the style conventions (QSS) for custom widgets in the EzQt Widgets project.
 
-## Principes généraux
-- Utiliser des couleurs, bordures et arrondis cohérents pour tous les widgets.
-- Privilégier les sélecteurs QSS spécifiques pour chaque composant custom.
-- Centraliser les couleurs et espacements pour faciliter la maintenance.
+## General Principles
+- Use consistent colors, borders, and rounded corners for all widgets.
+- Prefer specific QSS selectors for each custom component.
+- Centralize colors and spacing to facilitate maintenance.
 
 ---
 
 ### AutoCompleteInput
-[⬆️ Retour en haut](#sommaire)
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#autocompleteinput)
 
 <details>
-<summary>Voir le QSS</summary>
+<summary>View QSS</summary>
 
 ```css
-/* Widget principal */
+/* Main widget */
 AutoCompleteInput {
     background-color: #2d2d2d;
     border: 1px solid #444444;
@@ -63,26 +64,26 @@ AutoCompleteInput:focus {
 ```
 </details>
 
-- Adapter les couleurs selon la charte graphique de votre application.
-- Les propriétés de type sont automatiquement définies dans le code.
+- Adapt colors according to your application's graphic charter.
+- Type properties are automatically defined in the code.
 
 ---
 
 ### PasswordInput
-[⬆️ Retour en haut](#sommaire)
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#passwordinput)
 
 <details>
-<summary>Voir le QSS</summary>
+<summary>View QSS</summary>
 
 ```css
-/* Widget principal */
+/* Main widget */
 PasswordInput QWidget {
     background-color: #2d2d2d;
     border: 1px solid #444444;
     border-radius: 4px 4px 4px 4px;
 }
 
-/* Champ de saisie */
+/* Input field */
 PasswordInput QLineEdit {
     background-color: transparent;
     border: none;
@@ -104,20 +105,20 @@ PasswordInput QLineEdit:focus {
 ```
 </details>
 
-- Adapter les couleurs selon la charte graphique de votre application.
-- Le padding à droite est géré automatiquement pour l'icône.
-- Les propriétés de type sont automatiquement définies dans le code.
+- Adapt colors according to your application's graphic charter.
+- The right padding is automatically managed for the icon.
+- Type properties are automatically defined in the code.
 
 ---
 
 ### SearchInput
-[⬆️ Retour en haut](#sommaire)
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#searchinput)
 
 <details>
-<summary>Voir le QSS</summary>
+<summary>View QSS</summary>
 
 ```css
-/* Widget principal */
+/* Main widget */
 SearchInput {
     background-color: #2d2d2d;
     border: 1px solid #444444;
@@ -138,19 +139,19 @@ SearchInput:focus {
 ```
 </details>
 
-- Adapter les couleurs selon la charte graphique de votre application.
-- Les propriétés de type sont automatiquement définies dans le code.
+- Adapt colors according to your application's graphic charter.
+- Type properties are automatically defined in the code.
 
 ---
 
 ### TabReplaceTextEdit
-[⬆️ Retour en haut](#sommaire)
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#tabreplacetextedit)
 
 <details>
-<summary>Voir le QSS</summary>
+<summary>View QSS</summary>
 
 ```css
-/* Widget principal */
+/* Main widget */
 TabReplaceTextEdit {
     background-color: #2d2d2d;
     border-radius: 5px;
@@ -173,34 +174,34 @@ TabReplaceTextEdit:focus {
 ```
 </details>
 
-- Adapter les couleurs selon la charte graphique de votre application.
-- Les scrollbars sont personnalisées pour une meilleure intégration.
-- Les propriétés de type sont automatiquement définies dans le code.
+- Adapt colors according to your application's graphic charter.
+- Scrollbars are customized for better integration.
+- Type properties are automatically defined in the code.
 
 ---
 
 ### ClickableTagLabel
-[⬆️ Retour en haut](#sommaire)
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#clickabletaglabel)
 
 <details>
-<summary>Voir le QSS</summary>
+<summary>View QSS</summary>
 
 ```css
-/* Widget principal - état non sélectionné */
+/* Main widget - unselected state */
 ClickableTagLabel[status="unselected"] {
     background-color: #2d2d2d;
     border: 1px solid #444444;
     border-radius: 4px 4px 4px 4px;
 }
 
-/* Widget principal - état sélectionné */
+/* Main widget - selected state */
 ClickableTagLabel[status="selected"] {
     background-color: #2d2d2d;
     border: 1px solid #0078d4;
     border-radius: 4px 4px 4px 4px;
 }
 
-/* Label interne */
+/* Internal label */
 ClickableTagLabel QLabel {
     background-color: transparent;
     border: none;
@@ -210,20 +211,20 @@ ClickableTagLabel QLabel {
 ```
 </details>
 
-- Adapter les couleurs selon la charte graphique de votre application.
-- Les propriétés de type sont automatiquement définies dans le code.
-- Utiliser la propriété `status_color` pour personnaliser la couleur du texte sélectionné.
+- Adapt colors according to your application's graphic charter.
+- Type properties are automatically defined in the code.
+- Use the `status_color` property to customize the selected text color.
 
 ---
 
 ### HoverLabel
-[⬆️ Retour en haut](#sommaire)
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#hoverlabel)
 
 <details>
-<summary>Voir le QSS</summary>
+<summary>View QSS</summary>
 
 ```css
-/* Widget principal */
+/* Main widget */
 HoverLabel {
     background-color: #2d2d2d;
     border: 1px solid #444444;
@@ -232,19 +233,19 @@ HoverLabel {
 ```
 </details>
 
-- Adapter les couleurs selon la charte graphique de votre application.
-- Les propriétés de type sont automatiquement définies dans le code.
+- Adapt colors according to your application's graphic charter.
+- Type properties are automatically defined in the code.
 
 ---
 
 ### IndicatorLabel
-[⬆️ Retour en haut](#sommaire)
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#indicatorlabel)
 
 <details>
-<summary>Voir le QSS</summary>
+<summary>View QSS</summary>
 
 ```css
-/* Widget principal */
+/* Main widget */
 IndicatorLabel {
     background-color: #2d2d2d;
     border: 1px solid #444444;
@@ -253,19 +254,19 @@ IndicatorLabel {
 ```
 </details>
 
-- Adapter les couleurs selon la charte graphique de votre application.
-- Les propriétés de type sont automatiquement définies dans le code.
+- Adapt colors according to your application's graphic charter.
+- Type properties are automatically defined in the code.
 
 ---
 
 ### DateButton
-[⬆️ Retour en haut](#sommaire)
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#datebutton)
 
 <details>
-<summary>Voir le QSS</summary>
+<summary>View QSS</summary>
 
 ```css
-/* Widget principal */
+/* Main widget */
 DateButton {
     background-color: #2d2d2d;
     border: 1px solid #444444;
@@ -286,19 +287,19 @@ DateButton:focus {
 ```
 </details>
 
-- Adapter les couleurs selon la charte graphique de votre application.
-- Les propriétés de type sont automatiquement définies dans le code.
+- Adapt colors according to your application's graphic charter.
+- Type properties are automatically defined in the code.
 
 ---
 
 ### LoaderButton
-[⬆️ Retour en haut](#sommaire)
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#loaderbutton)
 
 <details>
-<summary>Voir le QSS</summary>
+<summary>View QSS</summary>
 
 ```css
-/* Widget principal */
+/* Main widget */
 LoaderButton {
     background-color: #2d2d2d;
     border: 1px solid #444444;
@@ -319,19 +320,19 @@ LoaderButton:focus {
 ```
 </details>
 
-- Adapter les couleurs selon la charte graphique de votre application.
-- Les propriétés de type sont automatiquement définies dans le code.
+- Adapt colors according to your application's graphic charter.
+- Type properties are automatically defined in the code.
 
 ---
 
 ### IconButton
-[⬆️ Retour en haut](#sommaire)
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#iconbutton)
 
 <details>
-<summary>Voir le QSS</summary>
+<summary>View QSS</summary>
 
 ```css
-/* Widget principal */
+/* Main widget */
 IconButton {
     background-color: #2d2d2d;
     border: 1px solid #444444;
@@ -352,23 +353,22 @@ IconButton:focus {
 ```
 </details>
 
-- Adapter les couleurs selon la charte graphique de votre application.
-- Les propriétés de type sont automatiquement définies dans le code.
+- Adapt colors according to your application's graphic charter.
+- Type properties are automatically defined in the code.
 
 ---
 
 ### CircularTimer
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#circulartimer)
 
-[⬆️ Retour en haut](#sommaire)
+**Note:** This widget does not use QSS for customization. Colors and appearance are controlled via Python properties:
 
-**Note :** Ce widget n'utilise pas de QSS pour la personnalisation. Les couleurs et l'apparence sont contrôlées via les propriétés Python :
+- `ring_color`: Color of the progress arc (QColor, str)
+- `node_color`: Color of the center (QColor, str)
+- `ring_width_mode`: Arc thickness ("small", "medium", "large")
+- `pen_width`: Custom thickness (prioritizes ring_width_mode)
 
-- `ring_color` : Couleur de l'arc de progression (QColor, str)
-- `node_color` : Couleur du centre (QColor, str)
-- `ring_width_mode` : Épaisseur de l'arc ("small", "medium", "large")
-- `pen_width` : Épaisseur personnalisée (prioritaire sur ring_width_mode)
-
-**Exemple d'utilisation :**
+**Example usage:**
 ```python
 timer = CircularTimer(
     ring_color="#0078d4",
@@ -381,21 +381,20 @@ timer = CircularTimer(
 ---
 
 ### OptionSelector
-
-[⬆️ Retour en haut](#sommaire)
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#optionselector)
 
 <details>
-<summary>Voir le QSS</summary>
+<summary>View QSS</summary>
 
 ```css
-/* Widget principal */
+/* Main widget */
 OptionSelector {
     background-color: #2d2d2d;
     border: 1px solid #444444;
     border-radius: 4px 4px 4px 4px;
 }
 
-/* Sélecteur animé */
+/* Animated selector */
 OptionSelector [type="OptionSelector_Selector"] {
     background-color: #0078d4;
     border: none;
@@ -404,21 +403,20 @@ OptionSelector [type="OptionSelector_Selector"] {
 ```
 </details>
 
-- Adapter les couleurs selon la charte graphique de votre application.
-- Les propriétés de type sont automatiquement définies dans le code.
-- Le sélecteur animé s'adapte automatiquement à l'option sélectionnée.
+- Adapt colors according to your application's graphic charter.
+- Type properties are automatically defined in the code.
+- The animated selector automatically adapts to the selected option.
 
 ---
 
 ### ToggleIcon
-
-[⬆️ Retour en haut](#sommaire)
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#toggleicon)
 
 <details>
-<summary>Voir le QSS</summary>
+<summary>View QSS</summary>
 
 ```css
-/* Widget principal */
+/* Main widget */
 ToggleIcon {
     background-color: #2d2d2d;
     border: none;
@@ -427,21 +425,20 @@ ToggleIcon {
 ```
 </details>
 
-- Adapter les couleurs selon la charte graphique de votre application.
-- Les propriétés de type sont automatiquement définies dans le code.
-- Le widget utilise soit des icônes personnalisées, soit des triangles dessinés par paintEvent.
+- Adapt colors according to your application's graphic charter.
+- Type properties are automatically defined in the code.
+- The widget uses either custom icons or draws triangles in paintEvent.
 
 ---
 
 ### ToggleSwitch
-
-[⬆️ Retour en haut](#sommaire)
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#toggleswitch)
 
 <details>
-<summary>Voir le QSS</summary>
+<summary>View QSS</summary>
 
 ```css
-/* Widget principal */
+/* Main widget */
 ToggleSwitch {
 	background-color: $_main_border;
 	border: 2px solid $_accent_color1;
@@ -454,18 +451,78 @@ ToggleSwitch:hover {
 ```
 </details>
 
-- Adapter les couleurs selon la charte graphique de votre application.
-- Les propriétés de type sont automatiquement définies dans le code.
-- Le widget utilise des variables CSS pour les couleurs ($_main_border, $_accent_color1, $_accent_color4).
+- Adapt colors according to your application's graphic charter.
+- Type properties are automatically defined in the code.
+- The widget uses CSS variables for colors ($_main_border, $_accent_color1, $_accent_color4).
 
 ---
 
-## Bonnes pratiques
+### DraggableList
+[⬆️ Back to top](#summary) | [📖 Complete documentation](WIDGETS_DOCUMENTATION.md#draggablelist)
 
-[⬆️ Retour en haut](#sommaire)
+<details>
+<summary>View QSS</summary>
 
-- Les propriétés de type sont automatiquement définies dans le code des widgets.
-- Documenter chaque section de QSS dans ce fichier.
-- Tester l'apparence sur différents OS et thèmes Qt.
-- Utiliser des couleurs cohérentes pour la sélection (selection-color et selection-background-color). 
+```css
+/* /////////////////////////////////////////////////////////////////////////////////////////////////
+DraggableList */
+DraggableList {
+	background-color: $_main_border;
+	border: 2px solid $_accent_color1;
+	border-radius: 6px;
+	padding: 8px;
+	color: rgb(255, 255, 255);
+}
+
+DraggableList QScrollArea {
+	background-color: $_main_surface;
+	border: 2px solid $_accent_color1;
+	border-radius: 6px;
+	padding: 4px 0px 4px 4px;
+}
+
+DraggableList QScrollArea QWidget {
+	background-color: transparent;
+	border: none;
+}
+
+[type="DraggableItem"] {
+	background-color: $_main_border;
+	border: 1px solid $_accent_color1;
+	border-radius: 6px 6px 6px 6px;
+}
+
+[type="DraggableItem"]:hover {
+	background-color: $_accent_color1;
+	border: 2px solid $_accent_color4;
+}
+
+[type="DraggableItem"][dragging="true"] {
+	background-color: $_accent_color4;
+	color: $_select_text_color;
+}
+
+[type="DraggableItem"] QLabel {
+	background-color: transparent;
+	border: none;
+	color: $_base_text_color;
+}
+```
+</details>
+
+- Adapt colors according to your application's graphic charter.
+- Type properties are automatically defined in the code.
+- The widget uses CSS variables for colors ($_main_border, $_accent_color1, $_accent_color4, $_main_surface, $_select_text_color, $_base_text_color).
+- The `dragging="true"` state is automatically applied during drag & drop.
+
+---
+
+## Good Practices
+
+[⬆️ Back to top](#summary)
+
+- Type properties are automatically defined in the code of widgets.
+- Document each QSS section in this file.
+- Test appearance on different OS and Qt themes.
+- Use consistent colors for selection (selection-color and selection-background-color). 
 

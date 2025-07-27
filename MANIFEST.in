@@ -1,11 +1,11 @@
 # Documentation principale
 include README.md
+include CHANGELOG.md
 include LICENSE
 include MANIFEST.in
 
 # Documentation dans docs/
 include docs/README.md
-include docs/CHANGELOG.md
 
 # Documentation de l'API
 include docs/api/README.md
@@ -15,6 +15,15 @@ include docs/api/INPUTS_DOCUMENTATION.md
 include docs/api/LABELS_DOCUMENTATION.md
 include docs/api/MISC_DOCUMENTATION.md
 include docs/api/STYLE_GUIDE.md
+
+# Documentation des exemples
+include examples/*
+recursive-include examples *
+
+# Fichiers d'exemples
+include tests/run_tests.py
+include tests/conftest.py
+include tests/test_simple.py
 
 # Documentation des tests
 include docs/tests/README.md

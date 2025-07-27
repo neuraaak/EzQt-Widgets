@@ -132,9 +132,7 @@ class HoverLabel(QLabel):
         *args,
         **kwargs,
     ) -> None:
-        super().__init__(text or "", parent, *args, **kwargs)
-
-        # ////// SET TYPE PROPERTY FOR QSS STYLING
+        super().__init__(parent, *args, text=text or "", **kwargs)
         self.setProperty("type", "HoverLabel")
 
         # ////// INITIALIZE PROPERTIES
