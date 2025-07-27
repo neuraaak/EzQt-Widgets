@@ -62,3 +62,33 @@ Thumbs.db
 _temp/
 *.tmp
 *.temp
+
+# CLI specific
+*.log
+*.pid
+
+# Development
+.env
+.env.local
+.env.*.local
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
