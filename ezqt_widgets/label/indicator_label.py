@@ -24,13 +24,10 @@ from PySide6.QtGui import (
 # IMPORT / GUI AND MODULES AND WIDGETS
 # ///////////////////////////////////////////////////////////////
 
-## ==> GLOBALS
-# ///////////////////////////////////////////////////////////////
+# ////// TYPE HINTS IMPROVEMENTS FOR PYSIDE6 6.9.1
+from typing import Optional, Dict
 
-## ==> FUNCTIONS
-# ///////////////////////////////////////////////////////////////
-
-## ==> VARIABLES
+# UTILITY FUNCTIONS
 # ///////////////////////////////////////////////////////////////
 
 # CLASS
@@ -87,13 +84,20 @@ class IndicatorLabel(QFrame):
     # ///////////////////////////////////////////////////////////////
 
     def __init__(
-        self, parent=None, status_map=None, initial_status="neutral", *args, **kwargs
+        self,
+        parent=None,
+        status_map: Optional[Dict[str, Dict[str, str]]] = None,
+        initial_status: str = "neutral",
+        *args,
+        **kwargs,
     ) -> None:
         super().__init__(parent, *args, **kwargs)
+
+        # ////// SET TYPE PROPERTY FOR QSS STYLING
         self.setProperty("type", "IndicatorLabel")
 
-        # Default status map
-        self.status_map = status_map or {
+        # ////// DEFAULT STATUS MAP
+        self._status_map: Dict[str, Dict[str, str]] = status_map or {
             "neutral": {"text": "En attente", "state": "none", "color": "#A0A0A0"},
             "online": {"text": "En ligne", "state": "ok", "color": "#4CAF50"},
             "partial": {
@@ -103,47 +107,61 @@ class IndicatorLabel(QFrame):
             },
             "offline": {"text": "Hors ligne", "state": "ko", "color": "#F44336"},
         }
-        self._status = None
 
-        # Frame setup
+        # ////// STATE VARIABLES
+        self._current_status: str = ""  # Initialize empty to force first update
+        self._status_label: Optional[QLabel] = None
+        self._led_label: Optional[QLabel] = None
+
+        # ////// SETUP WIDGET
+        self._setup_widget()
+
+        # ////// SET INITIAL STATUS
+        self.status = initial_status
+
+    def _setup_widget(self) -> None:
+        """Setup the widget properties and layout."""
+        # ////// SETUP FRAME
         self.setFrameShape(QFrame.NoFrame)
         self.setFrameShadow(QFrame.Raised)
         self.setContentsMargins(4, 2, 4, 2)
         self.setFixedHeight(24)
         self.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
-        # Layout
-        self.status_HLayout = QHBoxLayout(self)
-        self.status_HLayout.setObjectName("status_HLayout")
-        self.status_HLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.status_HLayout.setContentsMargins(0, 0, 0, 0)
-        self.status_HLayout.setSpacing(8)
+        # ////// CREATE LAYOUT
+        self._layout = QHBoxLayout(self)
+        self._layout.setObjectName("status_HLayout")
+        self._layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self._layout.setContentsMargins(0, 0, 0, 0)
+        self._layout.setSpacing(8)
 
-        # Status label
-        self.status_label = QLabel(self)
-        self.status_label.setObjectName("status_label")
-        self.status_label.setFont(QFont("Segoe UI", 10))
-        self.status_label.setLineWidth(0)
-        self.status_HLayout.addWidget(self.status_label, 0, Qt.AlignmentFlag.AlignTop)
+        # ////// CREATE STATUS LABEL
+        self._status_label = QLabel()
+        self._status_label.setObjectName("status_label")
+        self._status_label.setFont(QFont("Segoe UI", 10))
+        self._status_label.setLineWidth(0)
+        self._status_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self._status_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
-        # LED label
-        self.status_led = QLabel(self)
-        self.status_led.setObjectName("status_led")
-        self.status_led.setFixedSize(QSize(13, 16))
-        self.status_led.setFont(QFont("Segoe UI", 10))
-        self.status_led.setLineWidth(0)
-        self.status_HLayout.addWidget(self.status_led, 0, Qt.AlignmentFlag.AlignTop)
+        # ////// CREATE LED LABEL
+        self._led_label = QLabel()
+        self._led_label.setObjectName("status_led")
+        self._led_label.setFixedSize(QSize(13, 16))
+        self._led_label.setFont(QFont("Segoe UI", 10))
+        self._led_label.setLineWidth(0)
+        self._led_label.setAlignment(Qt.AlignCenter)
 
-        # Set initial status
-        self.set_status(initial_status)
+        # ////// ADD WIDGETS TO LAYOUT
+        self._layout.addWidget(self._status_label, 0, Qt.AlignmentFlag.AlignTop)
+        self._layout.addWidget(self._led_label, 0, Qt.AlignmentFlag.AlignTop)
 
-    # PROPERTY FUNCTIONS
+    # PROPERTIES
     # ///////////////////////////////////////////////////////////////
 
     @property
     def status(self) -> str:
-        """Get or set the current status key."""
-        return self._status
+        """Get the current status key."""
+        return self._current_status
 
     @status.setter
     def status(self, value: str) -> None:
@@ -154,31 +172,50 @@ class IndicatorLabel(QFrame):
     # ///////////////////////////////////////////////////////////////
 
     def set_status(self, status: str) -> None:
-        """Set the current status key."""
-        if status not in self.status_map:
+        """Set the current status and update the display."""
+        if status not in self._status_map:
+            # ////// RAISE ERROR FOR UNKNOWN STATUS (LIKE OLD VERSION)
             raise ValueError(f"Unknown status: {status}")
-        if status == self._status:
+
+        if status != self._current_status:
+            self._current_status = status
+            self._update_display()
+            self.statusChanged.emit(self._current_status)
+
+    def _update_display(self) -> None:
+        """Update the display based on current status."""
+        if not self._status_label or not self._led_label:
             return
-        data = self.status_map[status]
-        self.status_label.setText(data["text"])
-        self.setProperty("state", data["state"])
-        # Set LED color (simple background color)
-        self.status_led.setStyleSheet(
+
+        # ////// GET STATUS INFO
+        status_info = self._status_map.get(self._current_status, {})
+        text = status_info.get("text", "Inconnu")
+        state = status_info.get("state", "none")
+        color = status_info.get("color", "#A0A0A0")
+
+        # ////// UPDATE STATUS LABEL
+        self._status_label.setText(text)
+
+        # ////// UPDATE LED COLOR (LIKE OLD VERSION)
+        self._led_label.setStyleSheet(
             f"""
-            background-color: {data['color']};
+            background-color: {color};
             border: 2px solid rgb(66, 66, 66);
             border-radius: 6px;
             margin-top: 3px;
             """
         )
-        self._status = status
-        self.refresh_style()
-        self.statusChanged.emit(status)
+
+        # ////// SET STATE PROPERTY FOR STYLING
+        self.setProperty("state", state)
+        self.style().unpolish(self)
+        self.style().polish(self)
 
     # STYLE FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
     def refresh_style(self) -> None:
-        """Refresh the widget's style (useful after dynamic stylesheet changes)."""
+        """Refresh the widget style."""
         self.style().unpolish(self)
         self.style().polish(self)
+        self.update()

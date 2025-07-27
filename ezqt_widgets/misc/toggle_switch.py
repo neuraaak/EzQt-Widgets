@@ -13,12 +13,15 @@ from PySide6.QtCore import (
     QPropertyAnimation,
     QEasingCurve,
     Property,
+    QRect,
 )
 from PySide6.QtGui import (
     QPainter,
     QColor,
     QPen,
     QBrush,
+    QMouseEvent,
+    QPaintEvent,
 )
 from PySide6.QtWidgets import (
     QWidget,
@@ -28,13 +31,12 @@ from PySide6.QtWidgets import (
 # IMPORT / GUI AND MODULES AND WIDGETS
 # ///////////////////////////////////////////////////////////////
 
-## ==> GLOBALS
+# ////// TYPE HINTS IMPROVEMENTS FOR PYSIDE6 6.9.1
+
+# UTILITY FUNCTIONS
 # ///////////////////////////////////////////////////////////////
 
-## ==> VARIABLES
-# ///////////////////////////////////////////////////////////////
-
-## ==> CLASSES
+# CLASS
 # ///////////////////////////////////////////////////////////////
 
 
@@ -60,6 +62,8 @@ class ToggleSwitch(QWidget):
         Width of the toggle switch (default: 50).
     height : int, optional
         Height of the toggle switch (default: 24).
+    animation : bool, optional
+        Whether to animate the toggle (default: True).
     *args, **kwargs :
         Additional arguments passed to QWidget.
 
@@ -71,6 +75,8 @@ class ToggleSwitch(QWidget):
         Get or set the width of the toggle.
     height : int
         Get or set the height of the toggle.
+    animation : bool
+        Get or set whether animation is enabled.
 
     Signals
     -------
@@ -80,190 +86,199 @@ class ToggleSwitch(QWidget):
 
     toggled = Signal(bool)
 
+    # INITIALIZATION
+    # ///////////////////////////////////////////////////////////////
+
     def __init__(
         self,
         parent=None,
-        checked=False,
-        width=50,
-        height=24,
-        animation=True,
+        checked: bool = False,
+        width: int = 50,
+        height: int = 24,
+        animation: bool = True,
         *args,
         **kwargs,
     ) -> None:
         super().__init__(parent, *args, **kwargs)
-        
-        # Configuration
-        self._checked = checked
-        self._width = width
-        self._height = height
-        self._circle_radius = (height - 4) // 2  # Circle radius with 2px margin
-        self._animation_duration = 200
-        self._animation_enabled = animation
-        
-        # Colors (will be overridden by CSS)
-        self._bg_color_off = QColor(44, 49, 58)  # Default dark theme
-        self._bg_color_on = QColor(150, 205, 50)  # Default accent color
-        self._circle_color = QColor(255, 255, 255)
-        self._border_color = QColor(52, 59, 72)
-        
-        # Initialize position first
-        self._circle_position = self._get_circle_position()
-        
-        # Animation (after _circle_position is initialized)
-        self._animation = QPropertyAnimation(self, b"circle_position")
-        self._animation.setDuration(self._animation_duration)
-        self._animation.setEasingCurve(QEasingCurve.InOutQuart)
-        
-        # Setup
+
+        # ////// INITIALIZE PROPERTIES
+        self._checked: bool = checked
+        self._width: int = width
+        self._height: int = height
+        self._animation: bool = animation
+        self._circle_radius: int = (height - 4) // 2  # Circle radius with 2px margin
+        self._animation_duration: int = 200
+
+        # ////// COLORS
+        self._bg_color_off: QColor = QColor(44, 49, 58)  # Default dark theme
+        self._bg_color_on: QColor = QColor(150, 205, 50)  # Default accent color
+        self._circle_color: QColor = QColor(255, 255, 255)
+        self._border_color: QColor = QColor(52, 59, 72)
+
+        # ////// INITIALIZE POSITION
+        self._circle_position: int = self._get_circle_position()
+
+        # ////// SETUP ANIMATION
+        self._setup_animation()
+
+        # ////// SETUP WIDGET
+        self._setup_widget()
+
+    def _setup_animation(self) -> None:
+        """Setup the animation system."""
+        self._animation_obj = QPropertyAnimation(self, b"circle_position")
+        self._animation_obj.setDuration(self._animation_duration)
+        self._animation_obj.setEasingCurve(QEasingCurve.InOutQuart)
+
+    def _setup_widget(self) -> None:
+        """Setup the widget properties."""
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.setFixedSize(width, height)
+        self.setFixedSize(self._width, self._height)
         self.setCursor(Qt.PointingHandCursor)
-        
+
     def _get_circle_position(self) -> int:
         """Calculate circle position based on state."""
         if self._checked:
             return self._width - self._height + 2  # Right position
         else:
             return 2  # Left position
-    
+
     def _get_circle_position_property(self) -> int:
         """Property getter for animation."""
         return self._circle_position
-    
-    def _set_circle_position_property(self, position: int):
+
+    def _set_circle_position_property(self, position: int) -> None:
         """Property setter for animation."""
         self._circle_position = position
         self.update()
-    
+
     # Property for animation
-    circle_position = Property(int, _get_circle_position_property, _set_circle_position_property)
-    
+    circle_position = Property(
+        int, _get_circle_position_property, _set_circle_position_property
+    )
+
+    # PROPERTIES
+    # ///////////////////////////////////////////////////////////////
+
     @property
     def checked(self) -> bool:
-        """Get the current toggle state."""
+        """Get the toggle state."""
         return self._checked
-    
+
     @checked.setter
-    def checked(self, value: bool):
-        """Set the toggle state with animation."""
-        if self._checked != value:
-            self._checked = value
-            # Ensure _circle_position exists before animating
-            if hasattr(self, '_circle_position'):
+    def checked(self, value: bool) -> None:
+        """Set the toggle state."""
+        if value != self._checked:
+            self._checked = bool(value)
+            if self._animation:
                 self._animate_circle()
             else:
                 self._circle_position = self._get_circle_position()
                 self.update()
             self.toggled.emit(self._checked)
-    
+
     @property
     def width(self) -> int:
         """Get the width of the toggle."""
         return self._width
-    
+
     @width.setter
-    def width(self, value: int):
+    def width(self, value: int) -> None:
         """Set the width of the toggle."""
-        self._width = value
-        self.setFixedWidth(value)
+        self._width = max(20, int(value))
+        self._circle_radius = (self._height - 4) // 2
+        self.setFixedSize(self._width, self._height)
         self._circle_position = self._get_circle_position()
         self.update()
-    
+
     @property
     def height(self) -> int:
         """Get the height of the toggle."""
         return self._height
-    
+
     @height.setter
-    def height(self, value: int):
+    def height(self, value: int) -> None:
         """Set the height of the toggle."""
-        self._height = value
-        self._circle_radius = (value - 4) // 2
-        self.setFixedHeight(value)
+        self._height = max(12, int(value))
+        self._circle_radius = (self._height - 4) // 2
+        self.setFixedSize(self._width, self._height)
         self._circle_position = self._get_circle_position()
         self.update()
-    
+
     @property
     def animation(self) -> bool:
-        """Get the animation state."""
-        return self._animation_enabled
-    
+        """Get whether animation is enabled."""
+        return self._animation
+
     @animation.setter
-    def animation(self, value: bool):
-        """Set the animation state."""
-        self._animation_enabled = value
-    
-    def _animate_circle(self):
-        """Animate the circle to its new position."""
-        if not self._animation_enabled:
-            # Update position immediately without animation
-            self._circle_position = self._get_circle_position()
-            self.update()
-            return
-            
-        try:
-            start_pos = self._circle_position
-            end_pos = self._get_circle_position()
-            
-            self._animation.setStartValue(start_pos)
-            self._animation.setEndValue(end_pos)
-            self._animation.start()
-        except Exception as e:
-            # Fallback: update position immediately without animation
-            self._circle_position = self._get_circle_position()
-            self.update()
-    
-    def toggle(self):
+    def animation(self, value: bool) -> None:
+        """Set whether animation is enabled."""
+        self._animation = bool(value)
+
+    # UTILITY FUNCTIONS
+    # ///////////////////////////////////////////////////////////////
+
+    def _animate_circle(self) -> None:
+        """Animate the circle movement."""
+        target_position = self._get_circle_position()
+        self._animation_obj.setStartValue(self._circle_position)
+        self._animation_obj.setEndValue(target_position)
+        self._animation_obj.start()
+
+    def toggle(self) -> None:
         """Toggle the switch state."""
         self.checked = not self._checked
-    
-    def mousePressEvent(self, event):
-        """Handle mouse press to toggle the switch."""
+
+    # EVENT FUNCTIONS
+    # ///////////////////////////////////////////////////////////////
+
+    def mousePressEvent(self, event: QMouseEvent) -> None:
+        """Handle mouse press events."""
         if event.button() == Qt.LeftButton:
             self.toggle()
-        super().mousePressEvent(event)
-    
-    def paintEvent(self, event):
+
+    def paintEvent(self, event: QPaintEvent) -> None:
         """Custom paint event to draw the toggle switch."""
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
-        
-        # Calculate dimensions
-        rect = self.rect()
-        border_radius = self._height // 2
-        
-        # Get colors from stylesheet or use defaults
-        palette = self.palette()
-        
-        # Background color based on state
-        if self._checked:
-            bg_color = QColor(150, 205, 50)  # Accent color when checked
-        else:
-            bg_color = QColor(44, 49, 58)  # Dark background when unchecked
-        
-        # Border color
-        border_color = QColor(52, 59, 72)
-        
-        # Circle color
-        circle_color = QColor(255, 255, 255)
-        
-        # Draw background
-        painter.setPen(QPen(border_color, 1))
+
+        # ////// DRAW BACKGROUND
+        bg_color = self._bg_color_on if self._checked else self._bg_color_off
+        painter.setPen(QPen(self._border_color, 1))
         painter.setBrush(QBrush(bg_color))
-        painter.drawRoundedRect(rect, border_radius, border_radius)
-        
-        # Draw circle
+        painter.drawRoundedRect(
+            0, 0, self._width, self._height, self._height // 2, self._height // 2
+        )
+
+        # ////// DRAW CIRCLE
         circle_x = self._circle_position
-        circle_y = self._height // 2
+        circle_y = (self._height - self._circle_radius * 2) // 2
+        circle_rect = QRect(
+            circle_x, circle_y, self._circle_radius * 2, self._circle_radius * 2
+        )
+
         painter.setPen(Qt.NoPen)
-        painter.setBrush(QBrush(circle_color))
-        painter.drawEllipse(circle_x, circle_y - self._circle_radius, 
-                           self._circle_radius * 2, self._circle_radius * 2)
-    
+        painter.setBrush(QBrush(self._circle_color))
+        painter.drawEllipse(
+            circle_x, circle_y, circle_rect.width(), circle_rect.height()
+        )
+
+    # OVERRIDE FUNCTIONS
+    # ///////////////////////////////////////////////////////////////
+
     def sizeHint(self) -> QSize:
         """Return the recommended size for the widget."""
         return QSize(self._width, self._height)
-    
+
     def minimumSizeHint(self) -> QSize:
         """Return the minimum size for the widget."""
-        return QSize(self._width, self._height) 
+        return QSize(20, 12)
+
+    # STYLE FUNCTIONS
+    # ///////////////////////////////////////////////////////////////
+
+    def refresh_style(self) -> None:
+        """Refresh the widget style."""
+        self.style().unpolish(self)
+        self.style().polish(self)
+        self.update()

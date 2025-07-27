@@ -21,13 +21,10 @@ from PySide6.QtWidgets import (
 # IMPORT / GUI AND MODULES AND WIDGETS
 # ///////////////////////////////////////////////////////////////
 
-## ==> GLOBALS
-# ///////////////////////////////////////////////////////////////
+# ////// TYPE HINTS IMPROVEMENTS FOR PYSIDE6 6.9.1
+from typing import Optional
 
-## ==> FUNCTIONS
-# ///////////////////////////////////////////////////////////////
-
-## ==> VARIABLES
+# UTILITY FUNCTIONS
 # ///////////////////////////////////////////////////////////////
 
 # CLASS
@@ -88,12 +85,12 @@ class FramedLabel(QFrame):
 
     def __init__(
         self,
-        text="",
+        text: str = "",
         parent=None,
-        alignment=Qt.AlignmentFlag.AlignCenter,
-        style_sheet=None,
-        min_width=None,
-        min_height=None,
+        alignment: Qt.AlignmentFlag = Qt.AlignmentFlag.AlignCenter,
+        style_sheet: Optional[str] = None,
+        min_width: Optional[int] = None,
+        min_height: Optional[int] = None,
         *args,
         **kwargs,
     ) -> None:
@@ -101,24 +98,24 @@ class FramedLabel(QFrame):
         self.setProperty("type", "FramedLabel")
 
         # ////// INITIALIZE MINIMUM SIZE PROPERTIES
-        self._min_width = min_width
-        self._min_height = min_height
+        self._min_width: Optional[int] = min_width
+        self._min_height: Optional[int] = min_height
+        self._alignment: Qt.AlignmentFlag = alignment
 
-        # // STYLE SHEET
+        # ////// STYLE SHEET
         self.setStyleSheet(style_sheet or "background-color: transparent;")
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         # //////
 
-        # // LAYOUT SETUP
+        # ////// LAYOUT SETUP
         layout = QVBoxLayout(self)
         layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setAlignment(alignment)
         # //////
 
-        # // LABEL SETUP
+        # ////// LABEL SETUP
         self.label = QLabel(text, self)
-        self._alignment = alignment
         self.label.setAlignment(alignment)
         layout.addWidget(self.label)
         # //////
@@ -129,14 +126,14 @@ class FramedLabel(QFrame):
     @property
     def text(self) -> str:
         """Get or set the label text."""
-        # // GET TEXT
+        # ////// GET TEXT
         return self.label.text()
         # //////
 
     @text.setter
     def text(self, value: str) -> None:
         """Set the label text."""
-        # // SET TEXT
+        # ////// SET TEXT
         if not isinstance(value, str):
             value = str(value)
         if value != self.label.text():
@@ -147,14 +144,14 @@ class FramedLabel(QFrame):
     @property
     def alignment(self) -> Qt.AlignmentFlag:
         """Get or set the alignment of the label."""
-        # // GET ALIGNMENT
+        # ////// GET ALIGNMENT
         return self._alignment
         # //////
 
     @alignment.setter
     def alignment(self, value: Qt.AlignmentFlag) -> None:
         """Set the alignment of the label."""
-        # // SET ALIGNMENT
+        # ////// SET ALIGNMENT
         self._alignment = value
         self.label.setAlignment(value)
         # Optionally update layout alignment as well
@@ -163,28 +160,28 @@ class FramedLabel(QFrame):
         # //////
 
     @property
-    def min_width(self):
+    def min_width(self) -> Optional[int]:
         """Get or set the minimum width."""
         return self._min_width
 
     @min_width.setter
-    def min_width(self, value):
+    def min_width(self, value: Optional[int]) -> None:
         """Set the minimum width."""
         self._min_width = value
         self.updateGeometry()
 
     @property
-    def min_height(self):
+    def min_height(self) -> Optional[int]:
         """Get or set the minimum height."""
         return self._min_height
 
     @min_height.setter
-    def min_height(self, value):
+    def min_height(self, value: Optional[int]) -> None:
         """Set the minimum height."""
         self._min_height = value
         self.updateGeometry()
 
-    # STYLE FUNCTIONS
+    # OVERRIDE FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
     def minimumSizeHint(self) -> QSize:
@@ -209,9 +206,11 @@ class FramedLabel(QFrame):
 
         return QSize(max(min_width, content_width), max(min_height, content_height))
 
+    # STYLE FUNCTIONS
+    # ///////////////////////////////////////////////////////////////
+
     def refresh_style(self) -> None:
         """Refresh the widget's style (useful after dynamic stylesheet changes)."""
-        # // REFRESH STYLE
         self.style().unpolish(self)
         self.style().polish(self)
-        # //////
+        self.update()

@@ -1,5 +1,6 @@
 # Inclure la doc principale
 include README.md
+include CHANGELOG.md
 include STYLE_GUIDE.md
 include LICENSE
 include MANIFEST.in

@@ -30,7 +30,7 @@ pip install .
 
 ## Dependencies
 
-- PySide6 (installed automatically)
+- PySide6 >= 6.9.1 (installed automatically)
 - Compatible with Python 3.9 to 3.12
 
 ## Usage Example
@@ -59,6 +59,18 @@ Simply import the desired widgets and use them as you would with standard Qt wid
 
 For consistent styling across your application, refer to the [STYLE_GUIDE.md](STYLE_GUIDE.md) file.
 This guide provides QSS (Qt Style Sheets) examples and best practices for all custom widgets in this library.
+
+## Changelog
+
+### Version 2.0.0
+- **Major Update**: Upgraded to PySide6 6.9.1+
+- **Improved Stability**: Better memory management and crash fixes
+- **Enhanced Typing**: Improved type annotations and IDE support
+- **Platform Support**: Extended platform compatibility
+- **Development Status**: Moved from Alpha to Beta
+
+### Migration from 1.x
+This is a major version update that requires PySide6 6.9.1 or higher. Most existing code should work without changes, but we recommend testing your applications thoroughly.
 
 ## License
 

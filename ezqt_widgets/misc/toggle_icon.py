@@ -1,15 +1,9 @@
 # -*- coding: utf-8 -*-
-"""
-ToggleIcon - Widget de label avec icônes toggleables.
-
-Ce module fournit un widget ToggleIcon qui affiche une icône qui change
-selon l'état (ouvert/fermé) et émet un signal lors du clic.
-"""
+# ///////////////////////////////////////////////////////////////
 
 # IMPORT BASE
 # ///////////////////////////////////////////////////////////////
-import re
-from typing import Union, Optional
+import requests
 
 # IMPORT SPECS
 # ///////////////////////////////////////////////////////////////
@@ -25,19 +19,24 @@ from PySide6.QtGui import (
     QPixmap,
     QPainter,
     QColor,
+    QMouseEvent,
+    QKeyEvent,
+    QPaintEvent,
+)
+from PySide6.QtSvg import (
+    QSvgRenderer,
 )
 from PySide6.QtWidgets import (
     QLabel,
 )
-from PySide6.QtSvg import QSvgRenderer
 
 # IMPORT / GUI AND MODULES AND WIDGETS
 # ///////////////////////////////////////////////////////////////
 
-## ==> GLOBALS
-# ///////////////////////////////////////////////////////////////
+# ////// TYPE HINTS IMPROVEMENTS FOR PYSIDE6 6.9.1
+from typing import Union, Optional
 
-## ==> FUNCTIONS
+# UTILITY FUNCTIONS
 # ///////////////////////////////////////////////////////////////
 
 
@@ -45,15 +44,15 @@ def colorize_pixmap(pixmap: QPixmap, color: QColor) -> QPixmap:
     """
     Applique une couleur à un QPixmap avec opacité.
 
-    Paramètres
+    Parameters
     ----------
     pixmap : QPixmap
         Le pixmap à colorer.
     color : QColor
         La couleur à appliquer.
 
-    Retourne
-    --------
+    Returns
+    -------
     QPixmap
         Le pixmap coloré.
     """
@@ -80,15 +79,15 @@ def load_icon_from_source(
     """
     Charge une icône depuis différentes sources (chemin, URL, QIcon, QPixmap).
 
-    Paramètres
+    Parameters
     ----------
     source : str | QIcon | QPixmap
         Source de l'icône (chemin de fichier, URL, QIcon, ou QPixmap).
-    size : QSize, optionnel
+    size : QSize, optional
         Taille souhaitée pour l'icône.
 
-    Retourne
-    --------
+    Returns
+    -------
     QPixmap
         Le pixmap de l'icône chargée.
     """
@@ -100,8 +99,6 @@ def load_icon_from_source(
         if source.startswith(("http://", "https://")):
             # Chargement depuis URL
             try:
-                import requests
-
                 response = requests.get(source, timeout=5)
                 response.raise_for_status()
                 pixmap = QPixmap()
@@ -135,9 +132,6 @@ def load_icon_from_source(
     return pixmap
 
 
-## ==> VARIABLES
-# ///////////////////////////////////////////////////////////////
-
 # CLASS
 # ///////////////////////////////////////////////////////////////
 
@@ -146,33 +140,28 @@ class ToggleIcon(QLabel):
     """
     ToggleIcon est un label avec icônes toggleables pour indiquer un état ouvert/fermé.
 
-    Paramètres
+    Parameters
     ----------
-    opened_icon : str | QIcon | QPixmap, optionnel
+    parent : QWidget, optional
+        Parent Qt (default: None).
+    opened_icon : str | QIcon | QPixmap, optional
         Icône à afficher quand l'état est "opened". Si None, utilise paintEvent.
-    closed_icon : str | QIcon | QPixmap, optionnel
+    closed_icon : str | QIcon | QPixmap, optional
         Icône à afficher quand l'état est "closed". Si None, utilise paintEvent.
-    icon_size : int, optionnel
+    icon_size : int, optional
         Taille des icônes en pixels (par défaut 16).
-    icon_color : QColor | str, optionnel
+    icon_color : QColor | str, optional
         Couleur à appliquer aux icônes (par défaut blanc avec 0.5 opacité).
-    initial_state : str, optionnel
+    initial_state : str, optional
         État initial ("opened" ou "closed", par défaut "closed").
-    min_width : int, optionnel
+    min_width : int, optional
         Largeur minimale du widget.
-    min_height : int, optionnel
+    min_height : int, optional
         Hauteur minimale du widget.
-    parent : QWidget, optionnel
-        Parent Qt.
+    *args, **kwargs :
+        Additional arguments passed to QLabel.
 
-    Signaux
-    -------
-    stateChanged(str)
-        Émis quand l'état change ("opened" ou "closed").
-    clicked()
-        Émis lors d'un clic sur le widget.
-
-    Propriétés
+    Properties
     ----------
     state : str
         État actuel ("opened" ou "closed").
@@ -188,6 +177,13 @@ class ToggleIcon(QLabel):
         Largeur minimale.
     min_height : int
         Hauteur minimale.
+
+    Signals
+    -------
+    stateChanged(str)
+        Émis quand l'état change ("opened" ou "closed").
+    clicked()
+        Émis lors d'un clic sur le widget.
     """
 
     stateChanged = Signal(str)  # "opened" ou "closed"
@@ -254,11 +250,11 @@ class ToggleIcon(QLabel):
     # ///////////////////////////////////////////////////////////////
 
     @property
-    def state(self):
+    def state(self) -> str:
         return self._state
 
     @state.setter
-    def state(self, value):
+    def state(self, value: str) -> None:
         if value not in ("opened", "closed"):
             value = "closed"
         if self._state != value:
@@ -267,11 +263,11 @@ class ToggleIcon(QLabel):
             self.stateChanged.emit(self._state)
 
     @property
-    def opened_icon(self):
+    def opened_icon(self) -> Optional[QPixmap]:
         return self._opened_icon
 
     @opened_icon.setter
-    def opened_icon(self, value):
+    def opened_icon(self, value: Union[str, QIcon, QPixmap]) -> None:
         self._opened_icon = load_icon_from_source(
             value, QSize(self._icon_size, self._icon_size)
         )
@@ -279,11 +275,11 @@ class ToggleIcon(QLabel):
             self._update_icon()
 
     @property
-    def closed_icon(self):
+    def closed_icon(self) -> Optional[QPixmap]:
         return self._closed_icon
 
     @closed_icon.setter
-    def closed_icon(self, value):
+    def closed_icon(self, value: Union[str, QIcon, QPixmap]) -> None:
         self._closed_icon = load_icon_from_source(
             value, QSize(self._icon_size, self._icon_size)
         )
@@ -291,11 +287,11 @@ class ToggleIcon(QLabel):
             self._update_icon()
 
     @property
-    def icon_size(self):
+    def icon_size(self) -> int:
         return self._icon_size
 
     @icon_size.setter
-    def icon_size(self, value):
+    def icon_size(self, value: int) -> None:
         self._icon_size = int(value)
         # Recharger les icônes avec la nouvelle taille
         if hasattr(self, "_opened_icon"):
@@ -309,49 +305,49 @@ class ToggleIcon(QLabel):
         self._update_icon()
 
     @property
-    def icon_color(self):
+    def icon_color(self) -> QColor:
         return self._icon_color
 
     @icon_color.setter
-    def icon_color(self, value):
+    def icon_color(self, value: Union[QColor, str]) -> None:
         self._icon_color = QColor(value)
         self._update_icon()
 
     @property
-    def min_width(self):
+    def min_width(self) -> Optional[int]:
         return self._min_width
 
     @min_width.setter
-    def min_width(self, value):
+    def min_width(self, value: Optional[int]) -> None:
         self._min_width = int(value) if value is not None else None
         self.updateGeometry()
 
     @property
-    def min_height(self):
+    def min_height(self) -> Optional[int]:
         return self._min_height
 
     @min_height.setter
-    def min_height(self, value):
+    def min_height(self, value: Optional[int]) -> None:
         self._min_height = int(value) if value is not None else None
         self.updateGeometry()
 
     # EVENT FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
-    def mousePressEvent(self, event) -> None:
+    def mousePressEvent(self, event: QMouseEvent) -> None:
         """Gère les événements de clic."""
         self.toggle_state()
         self.clicked.emit()
         super().mousePressEvent(event)
 
-    def keyPressEvent(self, event) -> None:
+    def keyPressEvent(self, event: QKeyEvent) -> None:
         """Gère les événements clavier."""
         if event.key() in (Qt.Key_Return, Qt.Key_Enter, Qt.Key_Space):
             self.toggle_state()
             self.clicked.emit()
         super().keyPressEvent(event)
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         """Dessine l'icône si aucune icône personnalisée n'est fournie, centrée dans un carré."""
         if not self._use_custom_icons:
             painter = QPainter(self)
@@ -462,3 +458,4 @@ class ToggleIcon(QLabel):
         """Rafraîchit le style du widget."""
         self.style().unpolish(self)
         self.style().polish(self)
+        self.update()

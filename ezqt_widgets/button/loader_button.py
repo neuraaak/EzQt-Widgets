@@ -11,8 +11,6 @@ from PySide6.QtCore import (
     QSize,
     Signal,
     QTimer,
-    QPropertyAnimation,
-    QEasingCurve,
 )
 from PySide6.QtGui import (
     QIcon,
@@ -20,6 +18,7 @@ from PySide6.QtGui import (
     QPainter,
     QColor,
     QPen,
+    QMouseEvent,
 )
 from PySide6.QtWidgets import (
     QHBoxLayout,
@@ -32,12 +31,14 @@ from PySide6.QtWidgets import (
 # IMPORT / GUI AND MODULES AND WIDGETS
 # ///////////////////////////////////////////////////////////////
 
-# ///////////////////////////////////////////////////////////////
-# FONCTIONS UTILITAIRES
+# ////// TYPE HINTS IMPROVEMENTS FOR PYSIDE6 6.9.1
+from typing import Optional, Union
+
+# UTILITY FUNCTIONS
 # ///////////////////////////////////////////////////////////////
 
 
-def create_spinner_pixmap(size=16, color="#0078d4"):
+def create_spinner_pixmap(size: int = 16, color: str = "#0078d4") -> QPixmap:
     """
     Create a spinner pixmap for loading animation.
 
@@ -84,7 +85,7 @@ def create_spinner_pixmap(size=16, color="#0078d4"):
     return pixmap
 
 
-def create_loading_icon(size=16, color="#0078d4"):
+def create_loading_icon(size: int = 16, color: str = "#0078d4") -> QIcon:
     """
     Create a loading icon with spinner.
 
@@ -103,7 +104,7 @@ def create_loading_icon(size=16, color="#0078d4"):
     return QIcon(create_spinner_pixmap(size, color))
 
 
-def create_success_icon(size=16, color="#28a745"):
+def create_success_icon(size: int = 16, color: str = "#28a745") -> QIcon:
     """
     Create a success icon (checkmark).
 
@@ -139,7 +140,7 @@ def create_success_icon(size=16, color="#28a745"):
     return QIcon(pixmap)
 
 
-def create_error_icon(size=16, color="#dc3545"):
+def create_error_icon(size: int = 16, color: str = "#dc3545") -> QIcon:
     """
     Create an error icon (X mark).
 
@@ -274,18 +275,18 @@ class LoaderButton(QToolButton):
     def __init__(
         self,
         parent=None,
-        text="",
-        icon=None,
-        loading_text="Chargement...",
-        loading_icon=None,
-        success_icon=None,
-        error_icon=None,
-        animation_speed=100,
-        auto_reset=True,
-        success_display_time=1000,
-        error_display_time=2000,
-        min_width=None,
-        min_height=None,
+        text: str = "",
+        icon: Optional[Union[QIcon, str]] = None,
+        loading_text: str = "Chargement...",
+        loading_icon: Optional[Union[QIcon, str]] = None,
+        success_icon: Optional[Union[QIcon, str]] = None,
+        error_icon: Optional[Union[QIcon, str]] = None,
+        animation_speed: int = 100,
+        auto_reset: bool = True,
+        success_display_time: int = 1000,
+        error_display_time: int = 2000,
+        min_width: Optional[int] = None,
+        min_height: Optional[int] = None,
         *args,
         **kwargs,
     ):
@@ -360,28 +361,28 @@ class LoaderButton(QToolButton):
         # ////// INITIAL DISPLAY
         self._update_display()
 
-    # PROPERTY FUNCTIONS
+    # PROPERTIES
     # ///////////////////////////////////////////////////////////////
 
     @property
-    def text(self):
+    def text(self) -> str:
         """Get or set the button text."""
         return self._original_text
 
     @text.setter
-    def text(self, value):
+    def text(self, value: str) -> None:
         """Set the button text."""
         self._original_text = str(value)
         if not self._is_loading:
             self._update_display()
 
     @property
-    def icon(self):
+    def icon(self) -> Optional[QIcon]:
         """Get or set the button icon."""
         return self._original_icon
 
     @icon.setter
-    def icon(self, value):
+    def icon(self, value: Optional[Union[QIcon, str]]) -> None:
         """Set the button icon."""
         if isinstance(value, str):
             # Handle string as icon path or URL
@@ -392,24 +393,24 @@ class LoaderButton(QToolButton):
             self._update_display()
 
     @property
-    def loading_text(self):
+    def loading_text(self) -> str:
         """Get or set the loading text."""
         return self._loading_text
 
     @loading_text.setter
-    def loading_text(self, value):
+    def loading_text(self, value: str) -> None:
         """Set the loading text."""
         self._loading_text = str(value)
         if self._is_loading:
             self._update_display()
 
     @property
-    def loading_icon(self):
+    def loading_icon(self) -> Optional[QIcon]:
         """Get or set the loading icon."""
         return self._loading_icon
 
     @loading_icon.setter
-    def loading_icon(self, value):
+    def loading_icon(self, value: Optional[Union[QIcon, str]]) -> None:
         """Set the loading icon."""
         if isinstance(value, str):
             # Handle string as icon path or URL
@@ -418,12 +419,12 @@ class LoaderButton(QToolButton):
             self._loading_icon = value
 
     @property
-    def success_icon(self):
+    def success_icon(self) -> Optional[QIcon]:
         """Get or set the success icon."""
         return self._success_icon
 
     @success_icon.setter
-    def success_icon(self, value):
+    def success_icon(self, value: Optional[Union[QIcon, str]]) -> None:
         """Set the success icon."""
         if isinstance(value, str):
             # Handle string as icon path or URL
@@ -432,12 +433,12 @@ class LoaderButton(QToolButton):
             self._success_icon = value
 
     @property
-    def error_icon(self):
+    def error_icon(self) -> Optional[QIcon]:
         """Get or set the error icon."""
         return self._error_icon
 
     @error_icon.setter
-    def error_icon(self, value):
+    def error_icon(self, value: Optional[Union[QIcon, str]]) -> None:
         """Set the error icon."""
         if isinstance(value, str):
             # Handle string as icon path or URL
@@ -446,70 +447,70 @@ class LoaderButton(QToolButton):
             self._error_icon = value
 
     @property
-    def success_display_time(self):
+    def success_display_time(self) -> int:
         """Get or set the success display time."""
         return self._success_display_time
 
     @success_display_time.setter
-    def success_display_time(self, value):
+    def success_display_time(self, value: int) -> None:
         """Set the success display time."""
         self._success_display_time = int(value)
 
     @property
-    def error_display_time(self):
+    def error_display_time(self) -> int:
         """Get or set the error display time."""
         return self._error_display_time
 
     @error_display_time.setter
-    def error_display_time(self, value):
+    def error_display_time(self, value: int) -> None:
         """Set the error display time."""
         self._error_display_time = int(value)
 
     @property
-    def is_loading(self):
+    def is_loading(self) -> bool:
         """Get the current loading state."""
         return self._is_loading
 
     @property
-    def animation_speed(self):
+    def animation_speed(self) -> int:
         """Get or set the animation speed."""
         return self._animation_speed
 
     @animation_speed.setter
-    def animation_speed(self, value):
+    def animation_speed(self, value: int) -> None:
         """Set the animation speed."""
         self._animation_speed = int(value)
         if self._spinner_animation:
             self._spinner_animation.setDuration(self._animation_speed)
 
     @property
-    def auto_reset(self):
+    def auto_reset(self) -> bool:
         """Get or set auto-reset behavior."""
         return self._auto_reset
 
     @auto_reset.setter
-    def auto_reset(self, value):
+    def auto_reset(self, value: bool) -> None:
         """Set auto-reset behavior."""
         self._auto_reset = bool(value)
 
     @property
-    def min_width(self):
+    def min_width(self) -> Optional[int]:
         """Get or set the minimum width of the button."""
         return self._min_width
 
     @min_width.setter
-    def min_width(self, value):
+    def min_width(self, value: Optional[int]) -> None:
         """Set the minimum width of the button."""
         self._min_width = value
         self.updateGeometry()
 
     @property
-    def min_height(self):
+    def min_height(self) -> Optional[int]:
         """Get or set the minimum height of the button."""
         return self._min_height
 
     @min_height.setter
-    def min_height(self, value):
+    def min_height(self, value: Optional[int]) -> None:
         """Set the minimum height of the button."""
         self._min_height = value
         self.updateGeometry()
@@ -517,7 +518,7 @@ class LoaderButton(QToolButton):
     # UTILITY FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
-    def start_loading(self):
+    def start_loading(self) -> None:
         """Start the loading animation."""
         if self._is_loading:
             return
@@ -534,7 +535,7 @@ class LoaderButton(QToolButton):
 
         self.loadingStarted.emit()
 
-    def _rotate_spinner(self):
+    def _rotate_spinner(self) -> None:
         """Rotate the spinner icon."""
         if not self._is_loading:
             return
@@ -564,7 +565,7 @@ class LoaderButton(QToolButton):
                 # Set the rotated pixmap
                 self.icon_label.setPixmap(rotated_pixmap)
 
-    def stop_loading(self, success=True, error_message=""):
+    def stop_loading(self, success: bool = True, error_message: str = "") -> None:
         """Stop the loading animation."""
         if not self._is_loading:
             return
@@ -597,7 +598,7 @@ class LoaderButton(QToolButton):
             )
             QTimer.singleShot(display_time, self._reset_to_original)
 
-    def _show_success_state(self):
+    def _show_success_state(self) -> None:
         """Show success state with success icon."""
         self.text_label.setText("Succès!")
         if self._success_icon:
@@ -606,7 +607,7 @@ class LoaderButton(QToolButton):
         else:
             self.icon_label.hide()
 
-    def _show_error_state(self, error_message=""):
+    def _show_error_state(self, error_message: str = "") -> None:
         """Show error state with error icon."""
         if error_message:
             self.text_label.setText(f"Erreur: {error_message}")
@@ -619,11 +620,11 @@ class LoaderButton(QToolButton):
         else:
             self.icon_label.hide()
 
-    def _reset_to_original(self):
+    def _reset_to_original(self) -> None:
         """Reset to original state after auto-reset delay."""
         self._update_display()
 
-    def _setup_animations(self):
+    def _setup_animations(self) -> None:
         """Setup the spinner rotation animation."""
         # Create opacity effect for smooth transitions
         self._opacity_effect = QGraphicsOpacityEffect(self)
@@ -632,7 +633,7 @@ class LoaderButton(QToolButton):
         # Store rotation angle for manual rotation
         self._rotation_angle = 0
 
-    def _update_display(self):
+    def _update_display(self) -> None:
         """Update the display based on current state."""
         if self._is_loading:
             # Show loading state
@@ -654,7 +655,7 @@ class LoaderButton(QToolButton):
     # EVENT FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event: QMouseEvent) -> None:
         """Handle mouse press events."""
         if not self._is_loading and event.button() == Qt.LeftButton:
             super().mousePressEvent(event)
@@ -697,7 +698,6 @@ class LoaderButton(QToolButton):
 
     def refresh_style(self) -> None:
         """Refresh the widget's style (useful after dynamic stylesheet changes)."""
-        # // REFRESH STYLE
         self.style().unpolish(self)
         self.style().polish(self)
-        # //////
+        self.update()

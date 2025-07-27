@@ -3,7 +3,6 @@
 
 # IMPORT BASE
 # ///////////////////////////////////////////////////////////////
-from typing import Dict, List, Optional
 
 # IMPORT SPECS
 # ///////////////////////////////////////////////////////////////
@@ -24,12 +23,13 @@ from PySide6.QtWidgets import (
 # ///////////////////////////////////////////////////////////////
 from ezqt_widgets.label.framed_label import FramedLabel
 
-# ///////////////////////////////////////////////////////////////
-# FONCTIONS UTILITAIRES
+# ////// TYPE HINTS IMPROVEMENTS FOR PYSIDE6 6.9.1
+from typing import Dict, List, Optional
+
+# UTILITY FUNCTIONS
 # ///////////////////////////////////////////////////////////////
 
-# ///////////////////////////////////////////////////////////////
-# CLASSES PRINCIPALES
+# CLASS
 # ///////////////////////////////////////////////////////////////
 
 
@@ -107,10 +107,10 @@ class OptionSelector(QFrame):
         self,
         items: List[str],
         default_id: int = 0,
-        min_width=None,
-        min_height=None,
-        orientation="horizontal",
-        animation_duration=300,
+        min_width: Optional[int] = None,
+        min_height: Optional[int] = None,
+        orientation: str = "horizontal",
+        animation_duration: int = 300,
         parent=None,
         *args,
         **kwargs,
@@ -220,34 +220,34 @@ class OptionSelector(QFrame):
             self.updateGeometry()
 
     @property
-    def min_width(self):
+    def min_width(self) -> Optional[int]:
         """Get or set the minimum width of the widget."""
         return self._min_width
 
     @min_width.setter
-    def min_width(self, value):
+    def min_width(self, value: Optional[int]) -> None:
         """Set the minimum width of the widget."""
         self._min_width = value
         self.updateGeometry()
 
     @property
-    def min_height(self):
+    def min_height(self) -> Optional[int]:
         """Get or set the minimum height of the widget."""
         return self._min_height
 
     @min_height.setter
-    def min_height(self, value):
+    def min_height(self, value: Optional[int]) -> None:
         """Set the minimum height of the widget."""
         self._min_height = value
         self.updateGeometry()
 
     @property
-    def animation_duration(self):
+    def animation_duration(self) -> int:
         """Get or set the animation duration in milliseconds."""
         return self._animation_duration
 
     @animation_duration.setter
-    def animation_duration(self, value):
+    def animation_duration(self, value: int) -> None:
         """Set the animation duration in milliseconds."""
         self._animation_duration = value
 
@@ -392,7 +392,6 @@ class OptionSelector(QFrame):
 
     def refresh_style(self) -> None:
         """Refresh the widget's style (useful after dynamic stylesheet changes)."""
-        # // REFRESH STYLE
         self.style().unpolish(self)
         self.style().polish(self)
-        # //////
+        self.update()

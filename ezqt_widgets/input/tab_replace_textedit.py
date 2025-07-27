@@ -6,8 +6,12 @@
 
 # IMPORT SPECS
 # ///////////////////////////////////////////////////////////////
+from PySide6.QtCore import (
+    Qt,
+)
 from PySide6.QtGui import (
     QKeySequence,
+    QKeyEvent,
 )
 from PySide6.QtWidgets import (
     QApplication,
@@ -17,13 +21,9 @@ from PySide6.QtWidgets import (
 # IMPORT / GUI AND MODULES AND WIDGETS
 # ///////////////////////////////////////////////////////////////
 
-## ==> GLOBALS
-# ///////////////////////////////////////////////////////////////
+# ////// TYPE HINTS IMPROVEMENTS FOR PYSIDE6 6.9.1
 
-## ==> FUNCTIONS
-# ///////////////////////////////////////////////////////////////
-
-## ==> VARIABLES
+# UTILITY FUNCTIONS
 # ///////////////////////////////////////////////////////////////
 
 # CLASS
@@ -37,31 +37,61 @@ class TabReplaceTextEdit(QPlainTextEdit):
 
     Parameters
     ----------
+    parent : QWidget, optional
+        The parent widget (default: None).
     tab_replacement : str, optional
         The string to replace tab characters with (default: "\n").
     sanitize_on_paste : bool, optional
         Whether to sanitize pasted text (default: True).
+    remove_empty_lines : bool, optional
+        Whether to remove empty lines during sanitization (default: True).
+    preserve_whitespace : bool, optional
+        Whether to preserve leading/trailing whitespace (default: False).
+    *args, **kwargs :
+        Additional arguments passed to QPlainTextEdit.
+
+    Properties
+    ----------
+    tab_replacement : str
+        Get or set the string used to replace tab characters.
+    sanitize_on_paste : bool
+        Enable or disable sanitizing pasted text.
+    remove_empty_lines : bool
+        Get or set whether to remove empty lines.
+    preserve_whitespace : bool
+        Get or set whether to preserve whitespace.
     """
 
     # INITIALIZATION
     # ///////////////////////////////////////////////////////////////
 
     def __init__(
-        self, *args, tab_replacement="\n", sanitize_on_paste=True, **kwargs
+        self,
+        parent=None,
+        tab_replacement: str = "\n",
+        sanitize_on_paste: bool = True,
+        remove_empty_lines: bool = True,
+        preserve_whitespace: bool = False,
+        *args,
+        **kwargs,
     ) -> None:
-        super().__init__(*args, **kwargs)
+        super().__init__(parent, *args, **kwargs)
+
+        # ////// SET WIDGET TYPE PROPERTY
         self.setProperty("type", "TabReplaceTextEdit")
 
-        # ////// INITIALIZE VARIABLES
-        self._tab_replacement = tab_replacement
-        self._sanitize_on_paste = sanitize_on_paste
+        # ////// INITIALIZE PROPERTIES
+        self._tab_replacement: str = tab_replacement
+        self._sanitize_on_paste: bool = sanitize_on_paste
+        self._remove_empty_lines: bool = remove_empty_lines
+        self._preserve_whitespace: bool = preserve_whitespace
 
-    # PROPERTY FUNCTIONS
+    # PROPERTIES
     # ///////////////////////////////////////////////////////////////
 
     @property
     def tab_replacement(self) -> str:
-        """Get or set the string used to replace tab characters."""
+        """Get the string used to replace tab characters."""
         return self._tab_replacement
 
     @tab_replacement.setter
@@ -71,48 +101,99 @@ class TabReplaceTextEdit(QPlainTextEdit):
 
     @property
     def sanitize_on_paste(self) -> bool:
-        """Enable or disable sanitizing pasted text."""
+        """Get whether sanitizing pasted text is enabled."""
         return self._sanitize_on_paste
 
     @sanitize_on_paste.setter
     def sanitize_on_paste(self, value: bool) -> None:
-        """Set whether to sanitize pasted text."""
+        """Set whether sanitizing pasted text is enabled."""
         self._sanitize_on_paste = bool(value)
+
+    @property
+    def remove_empty_lines(self) -> bool:
+        """Get whether empty lines are removed."""
+        return self._remove_empty_lines
+
+    @remove_empty_lines.setter
+    def remove_empty_lines(self, value: bool) -> None:
+        """Set whether empty lines are removed."""
+        self._remove_empty_lines = bool(value)
+
+    @property
+    def preserve_whitespace(self) -> bool:
+        """Get whether whitespace is preserved."""
+        return self._preserve_whitespace
+
+    @preserve_whitespace.setter
+    def preserve_whitespace(self, value: bool) -> None:
+        """Set whether whitespace is preserved."""
+        self._preserve_whitespace = bool(value)
 
     # UTILITY FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
     def sanitize_text(self, text: str) -> str:
-        """Sanitize the given text according to the current settings."""
-        text = text.replace("\t", self._tab_replacement)
-        lines = text.split("\n")
-        lines = [line for line in lines if line.strip()]
-        return "\n".join(lines)
+        """Sanitize text by replacing tabs and optionally removing empty lines."""
+        # ////// REPLACE TABS
+        sanitized = text.replace("\t", self._tab_replacement)
+
+        if self._remove_empty_lines:
+            # ////// SPLIT INTO LINES
+            lines = sanitized.split("\n")
+
+            # ////// FILTER EMPTY LINES
+            if self._preserve_whitespace:
+                # ////// KEEP LINES WITH WHITESPACE
+                lines = [line for line in lines if line.strip() or line]
+            else:
+                # ////// REMOVE ALL EMPTY LINES
+                lines = [line for line in lines if line.strip()]
+
+            # ////// REJOIN LINES
+            sanitized = "\n".join(lines)
+
+        return sanitized
 
     # EVENT FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
-    def keyPressEvent(self, event) -> None:
+    def keyPressEvent(self, event: QKeyEvent) -> None:
         """
         Overridden method from QPlainTextEdit. Modifies the behavior of the paste operation.
 
         Args:
             event: The event that triggers the method.
         """
+        # ////// HANDLE TAB KEY
+        if event.key() == Qt.Key_Tab:
+            # ////// INSERT TAB REPLACEMENT
+            cursor = self.textCursor()
+            cursor.insertText(self._tab_replacement)
+            event.accept()
+            return
+
+        # ////// HANDLE PASTE
         if self._sanitize_on_paste and event.matches(QKeySequence.StandardKey.Paste):
+            # ////// GET CLIPBOARD TEXT
             clipboard = QApplication.clipboard()
             text = clipboard.text()
+
+            # ////// SANITIZE TEXT
             text = self.sanitize_text(text)
+
+            # ////// INSERT SANITIZED TEXT
             self.insertPlainText(text)
-        else:
-            super().keyPressEvent(event)
+            event.accept()
+            return
+
+        # ////// DEFAULT BEHAVIOR
+        super().keyPressEvent(event)
 
     # STYLE FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
     def refresh_style(self) -> None:
         """Refresh the widget's style (useful after dynamic stylesheet changes)."""
-        # // REFRESH STYLE
         self.style().unpolish(self)
         self.style().polish(self)
-        # //////
+        self.update()

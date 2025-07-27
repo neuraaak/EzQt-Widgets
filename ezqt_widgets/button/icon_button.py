@@ -3,6 +3,7 @@
 
 # IMPORT BASE
 # ///////////////////////////////////////////////////////////////
+import requests
 
 # IMPORT SPECS
 # ///////////////////////////////////////////////////////////////
@@ -27,13 +28,16 @@ from PySide6.QtWidgets import (
 # IMPORT / GUI AND MODULES AND WIDGETS
 # ///////////////////////////////////////////////////////////////
 
+# ////// TYPE HINTS IMPROVEMENTS FOR PYSIDE6 6.9.1
+from typing import Optional, Union, Tuple
 
+# UTILITY FUNCTIONS
 # ///////////////////////////////////////////////////////////////
-# FONCTIONS UTILITAIRES
-# ///////////////////////////////////////////////////////////////
 
 
-def colorize_pixmap(pixmap, color="#FFFFFF", opacity=0.5):
+def colorize_pixmap(
+    pixmap: QPixmap, color: str = "#FFFFFF", opacity: float = 0.5
+) -> QPixmap:
     """Recolore un QPixmap avec la couleur et l'opacité données."""
     result = QPixmap(pixmap.size())
     result.fill(Qt.transparent)
@@ -46,18 +50,18 @@ def colorize_pixmap(pixmap, color="#FFFFFF", opacity=0.5):
     return result
 
 
-def load_icon_from_source(source) -> QIcon:
+def load_icon_from_source(source: Optional[Union[QIcon, str]]) -> Optional[QIcon]:
     """
     Load icon from various sources (QIcon, path, URL, etc.).
 
     Parameters
     ----------
-    source : QIcon or str
+    source : QIcon or str or None
         Icon source (QIcon, path, resource, URL, or SVG).
 
     Returns
     -------
-    QIcon
+    QIcon or None
         Loaded icon or None if failed.
     """
     # ////// HANDLE NONE
@@ -73,8 +77,6 @@ def load_icon_from_source(source) -> QIcon:
         if source.startswith("http://") or source.startswith("https://"):
             print(f"Loading icon from URL: {source}")
             try:
-                import requests
-
                 response = requests.get(source, timeout=5)
                 response.raise_for_status()
                 if "image" not in response.headers.get("Content-Type", ""):
@@ -141,8 +143,7 @@ def load_icon_from_source(source) -> QIcon:
         return None
 
 
-# ///////////////////////////////////////////////////////////////
-# CLASSES PRINCIPALES
+# CLASS
 # ///////////////////////////////////////////////////////////////
 
 
@@ -213,13 +214,13 @@ class IconButton(QToolButton):
     def __init__(
         self,
         parent=None,
-        icon=None,
-        text="",
-        icon_size=QSize(20, 20),
-        text_visible=True,
-        spacing=10,
-        min_width=None,
-        min_height=None,
+        icon: Optional[Union[QIcon, str]] = None,
+        text: str = "",
+        icon_size: Union[QSize, Tuple[int, int]] = QSize(20, 20),
+        text_visible: bool = True,
+        spacing: int = 10,
+        min_width: Optional[int] = None,
+        min_height: Optional[int] = None,
         *args,
         **kwargs,
     ) -> None:
@@ -227,16 +228,16 @@ class IconButton(QToolButton):
         self.setProperty("type", "IconButton")
 
         # ////// INITIALIZE VARIABLES
-        self._icon_size = (
+        self._icon_size: QSize = (
             QSize(*icon_size)
             if isinstance(icon_size, (tuple, list))
             else QSize(icon_size)
         )
-        self._text_visible = text_visible
-        self._spacing = spacing
-        self._current_icon = None
-        self._min_width = min_width
-        self._min_height = min_height
+        self._text_visible: bool = text_visible
+        self._spacing: int = spacing
+        self._current_icon: Optional[QIcon] = None
+        self._min_width: Optional[int] = min_width
+        self._min_height: Optional[int] = min_height
 
         # ////// SETUP UI COMPONENTS
         self.icon_label = QLabel()
@@ -271,12 +272,12 @@ class IconButton(QToolButton):
     # ///////////////////////////////////////////////////////////////
 
     @property
-    def icon(self):
+    def icon(self) -> Optional[QIcon]:
         """Get or set the button icon."""
         return self._current_icon
 
     @icon.setter
-    def icon(self, value):
+    def icon(self, value: Optional[Union[QIcon, str]]) -> None:
         """Set the button icon from various sources."""
         icon = load_icon_from_source(value)
         if icon:
@@ -287,24 +288,24 @@ class IconButton(QToolButton):
             self.iconChanged.emit(icon)
 
     @property
-    def text(self):
+    def text(self) -> str:
         """Get or set the button text."""
         return self.text_label.text()
 
     @text.setter
-    def text(self, value):
+    def text(self, value: str) -> None:
         """Set the button text."""
         if value != self.text_label.text():
             self.text_label.setText(str(value))
             self.textChanged.emit(str(value))
 
     @property
-    def icon_size(self):
+    def icon_size(self) -> QSize:
         """Get or set the icon size."""
         return self._icon_size
 
     @icon_size.setter
-    def icon_size(self, value):
+    def icon_size(self, value: Union[QSize, Tuple[int, int]]) -> None:
         """Set the icon size."""
         self._icon_size = (
             QSize(*value) if isinstance(value, (tuple, list)) else QSize(value)
@@ -314,12 +315,12 @@ class IconButton(QToolButton):
             self.icon_label.setFixedSize(self._icon_size)
 
     @property
-    def text_visible(self):
+    def text_visible(self) -> bool:
         """Get or set text visibility."""
         return self._text_visible
 
     @text_visible.setter
-    def text_visible(self, value):
+    def text_visible(self, value: bool) -> None:
         """Set text visibility."""
         self._text_visible = bool(value)
         if self._text_visible:
@@ -328,12 +329,12 @@ class IconButton(QToolButton):
             self.text_label.hide()
 
     @property
-    def spacing(self):
+    def spacing(self) -> int:
         """Get or set spacing between icon and text."""
         return self._spacing
 
     @spacing.setter
-    def spacing(self, value):
+    def spacing(self, value: int) -> None:
         """Set spacing between icon and text."""
         self._spacing = int(value)
         layout = self.layout()
@@ -341,23 +342,23 @@ class IconButton(QToolButton):
             layout.setSpacing(self._spacing)
 
     @property
-    def min_width(self):
+    def min_width(self) -> Optional[int]:
         """Get or set the minimum width of the button."""
         return self._min_width
 
     @min_width.setter
-    def min_width(self, value):
+    def min_width(self, value: Optional[int]) -> None:
         """Set the minimum width of the button."""
         self._min_width = value
         self.updateGeometry()
 
     @property
-    def min_height(self):
+    def min_height(self) -> Optional[int]:
         """Get or set the minimum height of the button."""
         return self._min_height
 
     @min_height.setter
-    def min_height(self, value):
+    def min_height(self, value: Optional[int]) -> None:
         """Set the minimum height of the button."""
         self._min_height = value
         self.updateGeometry()
@@ -365,21 +366,21 @@ class IconButton(QToolButton):
     # UTILITY FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
-    def clear_icon(self):
+    def clear_icon(self) -> None:
         """Remove the current icon."""
         self._current_icon = None
         self.icon_label.clear()
         self.iconChanged.emit(QIcon())
 
-    def clear_text(self):
+    def clear_text(self) -> None:
         """Clear the button text."""
         self.text = ""
 
-    def toggle_text_visibility(self):
+    def toggle_text_visibility(self) -> None:
         """Toggle text visibility."""
         self.text_visible = not self.text_visible
 
-    def set_icon_color(self, color="#FFFFFF", opacity=0.5):
+    def set_icon_color(self, color: str = "#FFFFFF", opacity: float = 0.5) -> None:
         """Apply color and opacity to the current icon."""
         if self._current_icon:
             pixmap = self._current_icon.pixmap(self._icon_size)
@@ -429,7 +430,6 @@ class IconButton(QToolButton):
 
     def refresh_style(self) -> None:
         """Refresh the widget's style (useful after dynamic stylesheet changes)."""
-        # // REFRESH STYLE
         self.style().unpolish(self)
         self.style().polish(self)
-        # //////
+        self.update()

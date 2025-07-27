@@ -3,6 +3,7 @@
 
 # IMPORT BASE
 # ///////////////////////////////////////////////////////////////
+import requests
 
 # IMPORT SPECS
 # ///////////////////////////////////////////////////////////////
@@ -11,26 +12,29 @@ from PySide6.QtCore import (
     Qt,
     QSize,
     QRect,
-)
-from PySide6.QtWidgets import (
-    QLabel,
+    QEvent,
 )
 from PySide6.QtGui import (
     QPainter,
     QIcon,
+    QPixmap,
+    QColor,
+    QMouseEvent,
+    QPaintEvent,
+    QResizeEvent,
+    QEnterEvent,
 )
-from PySide6.QtGui import QPixmap, QIcon
+from PySide6.QtWidgets import (
+    QLabel,
+)
 
 # IMPORT / GUI AND MODULES AND WIDGETS
 # ///////////////////////////////////////////////////////////////
 
-## ==> GLOBALS
-# ///////////////////////////////////////////////////////////////
+# ////// TYPE HINTS IMPROVEMENTS FOR PYSIDE6 6.9.1
+from typing import Optional, Union, Tuple
 
-## ==> FUNCTIONS
-# ///////////////////////////////////////////////////////////////
-
-## ==> VARIABLES
+# UTILITY FUNCTIONS
 # ///////////////////////////////////////////////////////////////
 
 # CLASS
@@ -108,6 +112,7 @@ class HoverLabel(QLabel):
     hoverIconClicked()
         Emitted when the hover icon is clicked.
     """
+
     hoverIconClicked = Signal()  # Signal personnalisé
 
     # INITIALIZATION
@@ -116,41 +121,54 @@ class HoverLabel(QLabel):
     def __init__(
         self,
         parent=None,
-        icon=None,
-        text="",
-        opacity=0.5,
-        icon_size=QSize(16, 16),
-        icon_color=None,
-        icon_padding=8,
-        icon_enabled=True,
-        min_width=None,
+        icon: Optional[Union[QIcon, str]] = None,
+        text: str = "",
+        opacity: float = 0.5,
+        icon_size: Union[QSize, Tuple[int, int]] = QSize(16, 16),
+        icon_color: Optional[Union[QColor, str]] = None,
+        icon_padding: int = 8,
+        icon_enabled: bool = True,
+        min_width: Optional[int] = None,
         *args,
         **kwargs,
     ) -> None:
         super().__init__(text or "", parent, *args, **kwargs)
-        self.setProperty("type", "HoverLabel")
-        # ////// INITIALIZE VARIABLES
-        self.show_hover_icon = False
-        self._opacity = opacity
-        self._icon_size = (
-            QSize(*icon_size)
-            if isinstance(icon_size, (tuple, list))
-            else QSize(icon_size)
-        )
-        self._icon_color = icon_color
-        self._icon_padding = icon_padding
-        self._icon_enabled = icon_enabled
-        self._min_width = min_width
-        self.setMouseTracking(True)
-        # ////// SET ICON (setter gère tout)
-        self.hover_icon = icon
 
-    # PROPERTY FUNCTIONS
+        # ////// SET TYPE PROPERTY FOR QSS STYLING
+        self.setProperty("type", "HoverLabel")
+
+        # ////// INITIALIZE PROPERTIES
+        self._opacity: float = opacity
+        self._hover_icon: Optional[QIcon] = None
+        self._icon_size: QSize = (
+            QSize(icon_size) if isinstance(icon_size, (tuple, list)) else icon_size
+        )
+        self._icon_color: Optional[Union[QColor, str]] = icon_color
+        self._icon_padding: int = icon_padding
+        self._icon_enabled: bool = icon_enabled
+        self._min_width: Optional[int] = min_width
+
+        # ////// STATE VARIABLES
+        self._show_hover_icon: bool = False
+
+        # ////// SETUP WIDGET
+        self.setMouseTracking(True)
+        self.setCursor(Qt.ArrowCursor)
+
+        # ////// SET MINIMUM WIDTH
+        if self._min_width:
+            self.setMinimumWidth(self._min_width)
+
+        # ////// SET ICON (setter gère tout)
+        if icon:
+            self.hover_icon = icon
+
+    # PROPERTIES
     # ///////////////////////////////////////////////////////////////
 
     @property
     def opacity(self) -> float:
-        """Get or set the opacity of the hover icon."""
+        """Get the opacity of the hover icon."""
         return self._opacity
 
     @opacity.setter
@@ -160,12 +178,12 @@ class HoverLabel(QLabel):
         self.update()
 
     @property
-    def hover_icon(self) -> QIcon:
-        """Get or set the icon displayed on hover."""
+    def hover_icon(self) -> Optional[QIcon]:
+        """Get the hover icon."""
         return self._hover_icon
 
     @hover_icon.setter
-    def hover_icon(self, value) -> None:
+    def hover_icon(self, value: Optional[Union[QIcon, str]]) -> None:
         """Set the icon displayed on hover. Accepts QIcon, str (path, resource, URL, or SVG), or None."""
         # ////// HANDLE NONE
         if value is None:
@@ -179,16 +197,16 @@ class HoverLabel(QLabel):
             if value.startswith("http://") or value.startswith("https://"):
                 print(f"Loading icon from URL: {value}")
                 try:
-                    import requests
                     response = requests.get(value, timeout=5)
                     response.raise_for_status()
-                    if 'image' not in response.headers.get('Content-Type', ''):
+                    if "image" not in response.headers.get("Content-Type", ""):
                         raise ValueError("URL does not point to an image file.")
                     image_data = response.content
                     # ////// HANDLE SVG FROM URL
-                    if value.lower().endswith('.svg'):
+                    if value.lower().endswith(".svg"):
                         from PySide6.QtSvg import QSvgRenderer
                         from PySide6.QtCore import QByteArray
+
                         renderer = QSvgRenderer(QByteArray(image_data))
                         pixmap = QPixmap(self._icon_size)
                         pixmap.fill(Qt.transparent)
@@ -200,15 +218,18 @@ class HoverLabel(QLabel):
                     else:
                         pixmap = QPixmap()
                         if not pixmap.loadFromData(image_data):
-                            raise ValueError("Failed to load image data from URL (unsupported format or corrupt image).")
+                            raise ValueError(
+                                "Failed to load image data from URL (unsupported format or corrupt image)."
+                            )
                         self._hover_icon = QIcon(pixmap)
                 except Exception as e:
                     raise ValueError(f"Failed to load icon from URL: {e}")
             # ////// HANDLE LOCAL SVG
-            elif value.lower().endswith('.svg'):
+            elif value.lower().endswith(".svg"):
                 try:
                     from PySide6.QtSvg import QSvgRenderer
                     from PySide6.QtCore import QFile
+
                     file = QFile(value)
                     if not file.open(QFile.ReadOnly):
                         raise ValueError(f"Cannot open SVG file: {value}")
@@ -233,7 +254,8 @@ class HoverLabel(QLabel):
         else:
             raise TypeError("hover_icon must be a QIcon, a path string, or None.")
         # ////// UPDATE STYLE
-        self.setStyleSheet(f"padding-right: {self._icon_size.width() + self._icon_padding if self._hover_icon and self._icon_enabled else 0}px;")
+
+        self._update_padding_style()
         self.update()
 
     @property
@@ -242,7 +264,7 @@ class HoverLabel(QLabel):
         return self._icon_size
 
     @icon_size.setter
-    def icon_size(self, value) -> None:
+    def icon_size(self, value: Union[QSize, Tuple[int, int]]) -> None:
         """Set the size of the hover icon."""
         if isinstance(value, QSize):
             self._icon_size = value
@@ -252,16 +274,17 @@ class HoverLabel(QLabel):
             raise TypeError(
                 "icon_size must be a QSize or a tuple/list of two integers."
             )
-        self.setStyleSheet(f"padding-right: {self._icon_size.width() + self._icon_padding if self._hover_icon and self._icon_enabled else 0}px;")
+        self._update_padding_style()
         self.update()
 
     @property
-    def icon_color(self):
+    def icon_color(self) -> Optional[Union[QColor, str]]:
         """Get or set the color overlay of the hover icon (QColor, str, or None)."""
         return self._icon_color
 
     @icon_color.setter
-    def icon_color(self, value):
+    def icon_color(self, value: Optional[Union[QColor, str]]) -> None:
+        """Set the color overlay of the hover icon."""
         self._icon_color = value
         self.update()
 
@@ -272,8 +295,9 @@ class HoverLabel(QLabel):
 
     @icon_padding.setter
     def icon_padding(self, value: int) -> None:
+        """Set the right padding for the icon."""
         self._icon_padding = int(value)
-        self.setStyleSheet(f"padding-right: {self._icon_size.width() + self._icon_padding if self._hover_icon and self._icon_enabled else 0}px;")
+        self._update_padding_style()
         self.update()
 
     @property
@@ -283,135 +307,146 @@ class HoverLabel(QLabel):
 
     @icon_enabled.setter
     def icon_enabled(self, value: bool) -> None:
+        """Set whether the icon is enabled."""
         self._icon_enabled = bool(value)
-        self.setStyleSheet(f"padding-right: {self._icon_size.width() + self._icon_padding if self._hover_icon and self._icon_enabled else 0}px;")
+        self._update_padding_style()
         self.update()
 
-    def clear_icon(self):
+    # UTILITY FUNCTIONS
+    # ///////////////////////////////////////////////////////////////
+
+    def clear_icon(self) -> None:
         """Remove the hover icon."""
         # ////// CLEAR ICON
         self._hover_icon = None
-        self.setStyleSheet(f"padding-right: 0px;")
+        self._update_padding_style()
         self.update()
+
+    def _update_padding_style(self) -> None:
+        """Update the padding style based on icon state."""
+        padding = (
+            self._icon_size.width() + self._icon_padding
+            if self._hover_icon and self._icon_enabled
+            else 0
+        )
+        self.setStyleSheet(f"padding-right: {padding}px;")
 
     # EVENT FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
-    def mouseMoveEvent(self, event) -> None:
+    def mouseMoveEvent(self, event: QMouseEvent) -> None:
         """Handle mouse movement events."""
-        vertical_offset = 5
-        icon_size = self._icon_size
-        icon_x = self.width() - icon_size.width() - 4
-        icon_y = (self.height() - icon_size.height()) // 2 + vertical_offset
-        icon_rect = QRect(icon_x, icon_y, icon_size.width(), icon_size.height())
-        if (
-            self.show_hover_icon
-            and self._hover_icon
-            and icon_rect.contains(event.pos())
-        ):
-            self.setCursor(Qt.CursorShape.PointingHandCursor)
+        if not self._icon_enabled or not self._hover_icon:
+            super().mouseMoveEvent(event)
+            return
+
+        # ////// CALCULATE ICON RECTANGLE (RIGHT SIDE)
+        icon_x = self.width() - self._icon_size.width() - 4
+        icon_y = (self.height() - self._icon_size.height()) // 2
+        icon_rect = QRect(
+            icon_x, icon_y, self._icon_size.width(), self._icon_size.height()
+        )
+
+        # ////// CHECK HOVER STATE
+        if icon_rect.contains(event.pos()):
+            self.setCursor(Qt.PointingHandCursor)
         else:
-            self.setCursor(Qt.CursorShape.ArrowCursor)
+            self.setCursor(Qt.ArrowCursor)
+
         super().mouseMoveEvent(event)
 
-    # ///////////////////////////////////////////////////////////////
-
-    def mousePressEvent(self, event) -> None:
+    def mousePressEvent(self, event: QMouseEvent) -> None:
         """Handle mouse press events."""
-        vertical_offset = 5
-        icon_size = self._icon_size
-        icon_x = self.width() - icon_size.width() - 4
-        icon_y = (self.height() - icon_size.height()) // 2 + vertical_offset
-        icon_rect = QRect(icon_x, icon_y, icon_size.width(), icon_size.height())
-        if (
-            self.show_hover_icon
-            and self._hover_icon
-            and icon_rect.contains(event.pos())
-        ):
+        if not self._icon_enabled or not self._hover_icon:
+            super().mousePressEvent(event)
+            return
+
+        # ////// CALCULATE ICON RECTANGLE (RIGHT SIDE)
+        icon_x = self.width() - self._icon_size.width() - 4
+        icon_y = (self.height() - self._icon_size.height()) // 2
+        icon_rect = QRect(
+            icon_x, icon_y, self._icon_size.width(), self._icon_size.height()
+        )
+
+        # ////// CHECK CLICK ON ICON
+        if icon_rect.contains(event.pos()) and event.button() == Qt.LeftButton:
             self.hoverIconClicked.emit()
-        super().mousePressEvent(event)
+        else:
+            super().mousePressEvent(event)
 
-    # ///////////////////////////////////////////////////////////////
-
-    def enterEvent(self, event) -> None:
+    def enterEvent(self, event: QEnterEvent) -> None:
         """Handle enter events."""
-        self.show_hover_icon = True
+        self._show_hover_icon = True
         self.update()  # Demande de redessiner le widget
+        super().enterEvent(event)
 
-    # ///////////////////////////////////////////////////////////////
-
-    def leaveEvent(self, event) -> None:
+    def leaveEvent(self, event: QEvent) -> None:
         """Handle leave events."""
-        self.show_hover_icon = False
-        self.setCursor(Qt.CursorShape.ArrowCursor)
+        self._show_hover_icon = False
+        self.setCursor(Qt.ArrowCursor)
         self.update()
+        super().leaveEvent(event)
 
     # UI FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         """Paint the widget."""
         super().paintEvent(event)
+
         # ////// DRAW HOVER ICON IF NEEDED
-        if self.show_hover_icon and self._hover_icon:
+        if self._show_hover_icon and self._hover_icon and self._icon_enabled:
             painter = QPainter(self)
+            painter.setRenderHint(QPainter.Antialiasing)
             painter.setOpacity(self._opacity)
-            metrics = self.fontMetrics()
 
-            # ////// CALCULATE ICON SIZE
-            icon_height = min(self._icon_size.height(), metrics.height())
-            icon_size = QSize(icon_height, icon_height)
-
-            # ////// CALCULATE ICON POSITION
-            icon_x = self.width() - icon_size.width() - 4
-            icon_y = (self.height() - icon_size.height()) // 2
-
-            # ////// CALCULATE ICON RECTANGLE
-            icon_rect = QRect(icon_x, icon_y, icon_size.width(), icon_size.height())
+            # ////// CALCULATE ICON POSITION (RIGHT SIDE)
+            icon_x = self.width() - self._icon_size.width() - 4
+            icon_y = (self.height() - self._icon_size.height()) // 2
+            icon_rect = QRect(
+                icon_x, icon_y, self._icon_size.width(), self._icon_size.height()
+            )
 
             # ////// GET ICON PIXMAP
-            icon_pixmap = self._hover_icon.pixmap(icon_size)
-            
-            # ////// APPLY COLOR OVERLAY
-            if self._icon_color:
-                from PySide6.QtGui import QColor, QPixmap, QPainter as QPainter2
+            icon_pixmap = self._hover_icon.pixmap(self._icon_size)
 
-                overlay = QPixmap(icon_pixmap.size())
-                overlay.fill(Qt.transparent)
-                painter2 = QPainter2(overlay)
-                color = QColor(self._icon_color)
-                painter2.setCompositionMode(
-                    QPainter2.CompositionMode.CompositionMode_Source
+            # ////// APPLY COLOR OVERLAY IF SPECIFIED
+            if self._icon_color and not icon_pixmap.isNull():
+                colored_pixmap = QPixmap(icon_pixmap.size())
+                colored_pixmap.fill(Qt.transparent)
+                overlay_painter = QPainter(colored_pixmap)
+                overlay_painter.setCompositionMode(QPainter.CompositionMode_SourceOver)
+                overlay_painter.fillRect(
+                    colored_pixmap.rect(), QColor(self._icon_color)
                 )
-                painter2.fillRect(overlay.rect(), color)
-                painter2.setCompositionMode(
-                    QPainter2.CompositionMode.CompositionMode_DestinationIn
+                overlay_painter.setCompositionMode(
+                    QPainter.CompositionMode_DestinationIn
                 )
-                painter2.drawPixmap(0, 0, icon_pixmap)
-                painter2.end()
-                icon_pixmap = overlay
-            painter.drawPixmap(icon_rect, icon_pixmap)
+                overlay_painter.drawPixmap(0, 0, icon_pixmap)
+                overlay_painter.end()
+                painter.drawPixmap(icon_rect, colored_pixmap)
+            elif not icon_pixmap.isNull():
+                painter.drawPixmap(icon_rect, icon_pixmap)
+
+    # OVERRIDE FUNCTIONS
+    # ///////////////////////////////////////////////////////////////
+
+    def resizeEvent(self, event: QResizeEvent) -> None:
+        """Handle resize events."""
+        super().resizeEvent(event)
+        self.update()
+
+    def minimumSizeHint(self) -> QSize:
+        """Get the minimum size hint for the widget."""
+        base = super().minimumSizeHint()
+        min_width = self._min_width if self._min_width is not None else base.width()
+        return QSize(min_width, base.height())
 
     # STYLE FUNCTIONS
     # ///////////////////////////////////////////////////////////////
 
     def refresh_style(self) -> None:
         """Refresh the widget's style (useful after dynamic stylesheet changes)."""
-        # // REFRESH STYLE
         self.style().unpolish(self)
         self.style().polish(self)
-        # //////
-
-    def resizeEvent(self, event):
-        """Adjust right margin to make room for the icon."""
-        super().resizeEvent(event)
-
-    # ///////////////////////////////////////////////////////////////
-
-    def minimumSizeHint(self):
-        """Get the minimum size hint for the widget."""
-        base = super().minimumSizeHint()
-        min_width = self._min_width if self._min_width is not None else base.width()
-        return QSize(min_width, base.height())
-
-    # ///////////////////////////////////////////////////////////////
+        self.update()
