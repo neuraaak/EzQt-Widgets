@@ -6,8 +6,15 @@ include MANIFEST.in
 # Documentation dans docs/
 include docs/README.md
 include docs/CHANGELOG.md
-include docs/STYLE_GUIDE.md
-include docs/QUICK_START_TESTS.md
+
+# Documentation de l'API
+include docs/api/README.md
+include docs/api/WIDGETS_DOCUMENTATION.md
+include docs/api/BUTTONS_DOCUMENTATION.md
+include docs/api/INPUTS_DOCUMENTATION.md
+include docs/api/LABELS_DOCUMENTATION.md
+include docs/api/MISC_DOCUMENTATION.md
+include docs/api/STYLE_GUIDE.md
 
 # Documentation des tests
 include docs/tests/README.md
@@ -16,6 +23,7 @@ include docs/tests/test_button_README.md
 include docs/tests/test_input_README.md
 include docs/tests/test_label_README.md
 include docs/tests/test_misc_README.md
+include docs/tests/QUICK_START_TESTS.md
 
 # Fichiers de test
 include tests/run_tests.py

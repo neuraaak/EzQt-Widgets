@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2024-12-19
+
+### 📚 Documentation Reorganization
+- **API Documentation Structure** : Reorganized technical documentation into `docs/api/` folder
+- **Improved Navigation** : Better separation between general and API documentation
+- **Style Guide Integration** : Moved `STYLE_GUIDE.md` to API documentation section
+- **Updated Links** : All documentation links updated to reflect new structure
+
+### 🔄 Structural Changes
+- **New API Documentation Folder** : `docs/api/` for all widget API documentation
+- **Centralized Style Guide** : `docs/api/STYLE_GUIDE.md` for coding standards
+- **Updated MANIFEST.in** : Reflects new documentation structure for distributions
+- **Enhanced README** : Updated main documentation index with new structure
+
+### 📁 Updated Documentation Structure
+```
+docs/
+├── README.md                    # Main documentation index
+├── api/                        # 🎯 API Documentation
+│   ├── README.md              # API documentation guide
+│   ├── WIDGETS_DOCUMENTATION.md
+│   ├── BUTTONS_DOCUMENTATION.md
+│   ├── INPUTS_DOCUMENTATION.md
+│   ├── LABELS_DOCUMENTATION.md
+│   ├── MISC_DOCUMENTATION.md
+│   └── STYLE_GUIDE.md         # Coding standards
+└── tests/                      # 🧪 Test documentation
+    ├── README.md
+    ├── QUICK_START_TESTS.md
+    └── ...
+```
+
+### 🎯 Benefits
+- **Clearer Organization** : API documentation separated from general guides
+- **Better Navigation** : Intuitive structure for developers
+- **Professional Standards** : Follows industry conventions for API documentation
+- **Easier Maintenance** : Logical grouping of related documentation
+
 ## [2.1.0] - 2025-07-27
 
 ### 🏗️ Architecture
