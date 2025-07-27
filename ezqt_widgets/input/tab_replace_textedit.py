@@ -146,7 +146,7 @@ class TabReplaceTextEdit(QPlainTextEdit):
                 # ////// KEEP LINES WITH WHITESPACE
                 lines = [line for line in lines if line.strip() or line]
             else:
-                # ////// REMOVE ALL EMPTY LINES
+                # ////// REMOVE ALL EMPTY LINES BUT PRESERVE WHITESPACE
                 lines = [line for line in lines if line.strip()]
 
             # ////// REJOIN LINES

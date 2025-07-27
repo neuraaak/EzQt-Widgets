@@ -1,77 +1,134 @@
-# EzQt-Widgets
+# 🎨 EzQt_Widgets
 
-## Description
+Une collection de widgets Qt personnalisés et réutilisables pour PySide6.
 
-EzQt-Widgets is a collection of custom Qt widgets designed to enhance applications built with [EzQt-App](https://pypi.org/project/EzQt-App/).
-This module provides advanced, reusable, and stylish graphical components, making it easier to develop modern and user-friendly interfaces.
-
-## Features
-
-- Ready-to-use custom widgets for PySide6/Qt applications
-- Consistent design and easy integration with EzQt-App projects
-- Modular and extensible components (buttons, labels, loaders, etc.)
-- Facilitates the creation of modern, ergonomic UIs
-
-## Installation
-
-Install via pip (recommended):
+## 📦 **Installation**
 
 ```bash
 pip install ezqt_widgets
 ```
 
-Or install locally:
-
-```bash
-git clone https://github.com/neuraaak/ezqt_widgets.git
-cd ezqt_widgets
-pip install .
-```
-
-## Dependencies
-
-- PySide6 >= 6.9.1 (installed automatically)
-- Compatible with Python 3.9 to 3.12
-
-## Usage Example
+## 🚀 **Utilisation Rapide**
 
 ```python
-from ezqt_widgets.widgets.extended.icon_button import IconButton
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication
+from ezqt_widgets.button import IconButton, DateButton, LoaderButton
+from ezqt_widgets.label import ClickableTagLabel, FramedLabel, HoverLabel, IndicatorLabel
+from ezqt_widgets.input import AutoCompleteInput, SearchInput, PasswordInput
+from ezqt_widgets.misc import CircularTimer, OptionSelector, ToggleIcon, ToggleSwitch
 
 app = QApplication([])
-window = QMainWindow()
 
-# Example: Add a custom IconButton to your window
-icon_button = IconButton(icon_path="path/to/icon.png", text="Click Me")
-window.setCentralWidget(icon_button)
+# Widgets bouton
+icon_btn = IconButton(icon="path/to/icon.png", text="Mon Bouton")
+date_btn = DateButton(date="2024-01-01")
+loader_btn = LoaderButton(text="Charger...")
 
-window.show()
+# Widgets label
+tag_label = ClickableTagLabel(name="Tag Cliquable")
+framed_label = FramedLabel(text="Label Encadré")
+hover_label = HoverLabel(text="Label avec Hover")
+indicator_label = IndicatorLabel(status="online")
+
+# Widgets input
+search_input = SearchInput(placeholder="Rechercher...")
+password_input = PasswordInput(placeholder="Mot de passe")
+
+# Widgets misc
+timer = CircularTimer(duration=60)
+toggle_switch = ToggleSwitch(checked=True)
+
 app.exec()
 ```
 
-## Integration with EzQt-App
+## 📚 **Documentation**
 
-EzQt-Widgets is designed to be seamlessly integrated into any EzQt-App project.
-Simply import the desired widgets and use them as you would with standard Qt widgets.
+- **Documentation complète** : [docs/](docs/)
+- **Guide de style** : [docs/STYLE_GUIDE.md](docs/STYLE_GUIDE.md)
+- **Changelog** : [docs/CHANGELOG.md](docs/CHANGELOG.md)
 
-## Styling
+## 🧪 **Tests**
 
-For consistent styling across your application, refer to the [STYLE_GUIDE.md](STYLE_GUIDE.md) file.
-This guide provides QSS (Qt Style Sheets) examples and best practices for all custom widgets in this library.
+### **Exécution des Tests**
+```bash
+# Tous les tests
+python tests/run_tests.py --type unit
 
-## Changelog
+# Tests spécifiques
+python -m pytest tests/unit/test_button/ -v
+python -m pytest tests/unit/test_label/ -v
+```
 
-### Version 2.0.0
-- **Major Update**: Upgraded to PySide6 6.9.1+
-- **Improved Stability**: Better memory management and crash fixes
-- **Enhanced Typing**: Improved type annotations and IDE support
-- **Platform Support**: Extended platform compatibility
-- **Development Status**: Moved from Alpha to Beta
+### **Documentation des Tests**
+- **Guide rapide** : [docs/QUICK_START_TESTS.md](docs/QUICK_START_TESTS.md)
+- **Documentation complète** : [docs/tests/](docs/tests/)
 
-### Migration from 1.x
-This is a major version update that requires PySide6 6.9.1 or higher. Most existing code should work without changes, but we recommend testing your applications thoroughly.
+## 📊 **Statistiques des Tests**
 
-## License
+- **Widgets Bouton** : 59 tests (56 passent, 3 skipped)
+- **Widgets Label** : 70 tests (67 passent, 3 skipped)
+- **Widgets Input** : 112 tests (111 passent, 1 skipped)
+- **Widgets Misc** : 41 tests ✅
+- **Tests de Base** : 3 tests ✅
+- **Total** : 262 tests (254 passent, 8 skipped)
 
-MIT License
+## 🎯 **Widgets Disponibles**
+
+### **Boutons**
+- `IconButton` - Bouton avec icône personnalisable
+- `DateButton` - Sélecteur de date avec calendrier
+- `LoaderButton` - Bouton avec états de chargement
+
+### **Labels**
+- `ClickableTagLabel` - Tag cliquable avec toggle
+- `FramedLabel` - Label avec cadre personnalisable
+- `HoverLabel` - Label avec effets au survol
+- `IndicatorLabel` - Indicateur de statut avec LED
+
+### **Inputs**
+- `AutoCompleteInput` - Champ de saisie avec autocomplétion
+- `SearchInput` - Champ de recherche avec historique
+- `TabReplaceTextEdit` - Éditeur de texte avec remplacement de tabulations
+- `PasswordInput` - Champ de mot de passe avec barre de force
+
+### **Misc**
+- `CircularTimer` - Timer circulaire avec animation
+- `OptionSelector` - Sélecteur d'options avec interface moderne
+- `ToggleIcon` - Icône basculante avec états multiples
+- `ToggleSwitch` - Interrupteur moderne avec animation
+
+## 🔧 **Développement**
+
+### **Structure du Projet**
+```
+ezqt_widgets/
+├── README.md              # Ce fichier
+├── docs/                  # Documentation
+│   ├── README.md         # Index de documentation
+│   ├── STYLE_GUIDE.md    # Guide de style
+│   ├── CHANGELOG.md      # Historique des versions
+│   ├── QUICK_START_TESTS.md # Guide rapide des tests
+│   └── tests/            # Documentation des tests
+├── tests/                # Tests
+│   ├── run_tests.py      # Script d'exécution des tests
+│   ├── conftest.py       # Configuration pytest
+│   └── unit/             # Tests unitaires
+├── ezqt_widgets/         # Code source
+└── pyproject.toml        # Configuration du projet
+```
+
+### **Installation pour Développement**
+```bash
+git clone <repository>
+cd ezqt_widgets
+pip install -e .
+pip install -e ".[dev]"
+```
+
+## 📄 **Licence**
+
+Ce projet est sous licence MIT. Voir [LICENSE](LICENSE) pour plus de détails.
+
+---
+
+**État des tests :** 🟢 **OPÉRATIONNEL** (254/262 tests passent, 8 skipped)

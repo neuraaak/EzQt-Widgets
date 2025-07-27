@@ -369,7 +369,10 @@ class HoverLabel(QLabel):
         )
 
         # ////// CHECK CLICK ON ICON
-        if icon_rect.contains(event.pos()) and event.button() == Qt.LeftButton:
+        if (
+            icon_rect.contains(event.position().toPoint())
+            and event.button() == Qt.LeftButton
+        ):
             self.hoverIconClicked.emit()
         else:
             super().mousePressEvent(event)

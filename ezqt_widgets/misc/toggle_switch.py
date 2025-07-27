@@ -272,7 +272,7 @@ class ToggleSwitch(QWidget):
 
     def minimumSizeHint(self) -> QSize:
         """Return the minimum size for the widget."""
-        return QSize(20, 12)
+        return QSize(self._width, self._height)
 
     # STYLE FUNCTIONS
     # ///////////////////////////////////////////////////////////////

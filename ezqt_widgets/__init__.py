@@ -4,7 +4,7 @@
 """
 EzQt_Widgets package initialization.
 """
-__version__ = "1.0.9"
+__version__ = "2.1.0"
 
 # BUTTON WIDGETS
 from .button import *

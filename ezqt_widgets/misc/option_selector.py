@@ -205,7 +205,9 @@ class OptionSelector(QFrame):
     @property
     def selected_option(self) -> Optional[FramedLabel]:
         """Get the currently selected option widget."""
-        return self._options.get(self._value_id)
+        if self._value_id in self._options:
+            return self._options[self._value_id]
+        return None
 
     @property
     def orientation(self) -> str:
@@ -295,12 +297,15 @@ class OptionSelector(QFrame):
         # ////// STORE OPTION
         self._options[option_id] = option
 
+        # ////// UPDATE OPTIONS LIST
+        if option_id >= len(self._options_list):
+            # Ajouter des éléments vides si nécessaire
+            while len(self._options_list) <= option_id:
+                self._options_list.append("")
+        self._options_list[option_id] = option_text
+
     # UTILITY FUNCTIONS
     # ///////////////////////////////////////////////////////////////
-
-    def get_value_option(self) -> Optional[FramedLabel]:
-        """Get the currently selected option widget."""
-        return self._options.get(self._value_id)
 
     def toggle_selection(self, option_id: int) -> None:
         """Handle option selection."""
