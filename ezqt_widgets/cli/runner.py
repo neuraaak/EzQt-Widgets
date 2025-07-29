@@ -21,7 +21,12 @@ class ExampleRunner:
 
     def _find_examples_dir(self) -> Path:
         """Find the examples directory relative to the package."""
-        # Try to find examples in the project root
+        # First priority: examples inside the package (ezqt_widgets/examples/)
+        package_examples = Path(__file__).parent.parent / "examples"
+        if package_examples.exists():
+            return package_examples
+
+        # Second priority: try to find examples in the project root
         package_dir = Path(__file__).parent.parent.parent
         examples_dir = package_dir / "examples"
 
@@ -32,11 +37,6 @@ class ExampleRunner:
         current_examples = Path.cwd() / "examples"
         if current_examples.exists():
             return current_examples
-
-        # Last resort: try to find examples in the package
-        package_examples = Path(__file__).parent.parent / "examples"
-        if package_examples.exists():
-            return package_examples
 
         raise FileNotFoundError("Examples directory not found")
 
@@ -98,49 +98,34 @@ class ExampleRunner:
         """Execute a specific example file."""
         if self.verbose:
             click.echo(f"🚀 Running: {example_path.name}")
-            click.echo(f"📁 Path: {example_path}")
 
         try:
-            # Change to examples directory before running
-            examples_dir = example_path.parent
+            # Change to the examples directory to ensure relative imports work
             original_cwd = os.getcwd()
+            os.chdir(example_path.parent)
 
-            if self.verbose:
-                click.echo(f"📂 Changing to directory: {examples_dir}")
-
-            os.chdir(examples_dir)
-
-            # Run the example
             result = subprocess.run(
                 [sys.executable, str(example_path)],
-                check=True,
-                capture_output=not self.verbose,
+                capture_output=True,
+                text=True,
+                timeout=30,
             )
 
-            if self.verbose:
-                click.echo(f"✅ Successfully completed: {example_path.name}")
+            # Restore original working directory
+            os.chdir(original_cwd)
+
+            if result.returncode != 0:
+                click.echo(f"❌ Error running {example_path.name}: {result.stderr}")
+                return False
 
             return True
 
-        except subprocess.CalledProcessError as e:
-            click.echo(f"❌ Error running {example_path.name}: {e}")
-            if self.verbose and e.stderr:
-                click.echo(f"Error details: {e.stderr.decode()}")
+        except subprocess.TimeoutExpired:
+            click.echo(f"⏰ Timeout running {example_path.name}")
             return False
-
-        except KeyboardInterrupt:
-            click.echo(f"\n⏹️  {example_path.name} stopped by user")
-            return False
-
         except Exception as e:
-            click.echo(f"❌ Unexpected error running {example_path.name}: {e}")
+            click.echo(f"❌ Exception running {example_path.name}: {e}")
             return False
-        finally:
-            # Restore original working directory
-            try:
-                os.chdir(original_cwd)
-            except:
-                pass
 
     def list_examples(self) -> None:
         """List all available examples."""

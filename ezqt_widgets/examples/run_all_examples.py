@@ -13,6 +13,12 @@ import sys
 import os
 import re
 import yaml
+
+# Ajouter le dossier courant au path pour les imports relatifs
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
+
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QFont, QIcon, QPixmap
 from PySide6.QtWidgets import (

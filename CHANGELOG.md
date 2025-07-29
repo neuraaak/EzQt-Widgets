@@ -5,6 +5,77 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.3.post3] - 2025-01-15
+
+### 🔧 Package Distribution & Examples Integration Fix
+
+| Component | Updates | Benefits |
+|-----------|---------|----------|
+| **Examples Directory** | Moved examples/ inside ezqt_widgets/ package | Examples properly embedded in package |
+| **Package Data Configuration** | Fixed package-data to point to correct location | Examples available after installation |
+| **PySide6 Compatibility** | Adjusted version constraint to `>=6.7.3,<7.0.0` | Compatible with ezqt-app's PySide6==6.7.3 requirement |
+| **Dependency Resolution** | Fixed conflict with ezqt-app requirements | Seamless integration with ezqt-app |
+| **PyYAML Dependency** | Added PyYAML>=6.0 to dependencies | Examples can load YAML configuration files |
+
+### 🛠️ Technical Implementation
+
+| Component | Feature | Description |
+|-----------|---------|-------------|
+| **Directory Structure** | examples/ moved inside ezqt_widgets/ package | Proper package structure |
+| **Package Data** | Corrected paths in setuptools.package-data | Examples included in distribution |
+| **PySide6 Compatibility** | Adjusted version constraint to `>=6.7.3,<7.0.0` | Compatible with ezqt-app's PySide6==6.7.3 requirement |
+| **Installation** | Examples available in installed package | Users can access examples directly |
+| **Dependencies** | Added PyYAML>=6.0 | Required for loading app.yaml configuration files |
+
+### 🎯 Benefits
+
+| Benefit | Description |
+|---------|-------------|
+| **Complete Package** | Examples are now properly embedded in the package |
+| **ezqt-app Compatibility** | No more dependency conflicts with ezqt-app |
+| **Easy Access** | Users can find examples in the installed package |
+| **Better Distribution** | All resources included in package installation |
+| **Seamless Integration** | Can be installed alongside ezqt-app without issues |
+| **Working Examples** | All examples can now run without missing dependency errors |
+
+### 📦 Dependencies
+
+| Dependency | Version | Purpose |
+|------------|---------|---------|
+| **PySide6** | `>=6.7.3,<7.0.0` | Core Qt framework (compatible with ezqt-app) |
+| **PyYAML** | `>=6.0` | YAML file parsing for theme configuration |
+
+---
+
+## [2.2.3.post2] - 2025-01-15
+
+### 🔧 Package Distribution Enhancement
+
+| Component | Updates | Benefits |
+|-----------|---------|----------|
+| **Package Data Configuration** | Fixed package-data section in pyproject.toml | Proper embedding of examples and resources |
+| **MANIFEST.in** | Optimized file inclusion patterns | More efficient package building |
+| **Resource Embedding** | Ensured examples/, docs/, and tests/ are properly included | Complete package distribution |
+
+### 🛠️ Technical Implementation
+
+| Component | Feature | Description |
+|-----------|---------|-------------|
+| **Package Data Structure** | Changed from wildcard "*" to specific "ezqt_widgets" package | Correct resource embedding |
+| **Documentation Inclusion** | Added recursive-include for docs directory | All documentation files included |
+| **Examples Embedding** | Fixed examples directory inclusion | Examples available in installed package |
+
+### 🎯 Benefits
+
+| Benefit | Description |
+|---------|-------------|
+| **Complete Package** | All examples, docs, and tests properly embedded |
+| **Better Distribution** | Resources available after package installation |
+| **Improved Build Process** | More reliable and efficient package building |
+| **Enhanced User Experience** | Users have access to all project resources |
+
+---
+
 ## [2.2.3.post1] - 2025-01-15
 
 ### 🔧 Package Distribution Fix
@@ -230,405 +301,4 @@ docs/
 | **Developer Productivity** | Single command to run examples: `ezqt run --all` |
 | **Testing Workflow** | Streamlined test execution: `ezqt test --coverage` |
 | **Documentation Access** | Local documentation server: `ezqt docs --serve` |
-| **Project Management** | Quick project overview: `ezqt info` |
-| **Error Recovery** | Robust error handling prevents crashes |
-
----
-
-## [2.1.1] - 2025-07-27
-
-### 📚 Documentation Reorganization
-
-| Change | Description | Impact |
-|--------|-------------|---------|
-| **API Documentation Structure** | Reorganized technical documentation into `docs/api/` folder | Better organization |
-| **Improved Navigation** | Better separation between general and API documentation | Enhanced usability |
-| **Style Guide Integration** | Moved `STYLE_GUIDE.md` to API documentation section | Logical grouping |
-| **Updated Links** | All documentation links updated to reflect new structure | Consistent navigation |
-
-### 🔄 Structural Changes
-
-| Component | Change | Details |
-|-----------|--------|---------|
-| **New API Documentation Folder** | `docs/api/` | For all widget API documentation |
-| **Centralized Style Guide** | `docs/api/STYLE_GUIDE.md` | Coding standards location |
-| **Updated MANIFEST.in** | Reflects new documentation structure | Distribution improvements |
-| **Enhanced README** | Updated main documentation index | Better navigation |
-
-### 📁 Updated Documentation Structure
-
-```
-docs/
-├── README.md                    # Main documentation index
-├── api/                        # 🎯 API Documentation
-│   ├── README.md              # API documentation guide
-│   ├── WIDGETS_DOCUMENTATION.md
-│   ├── BUTTONS_DOCUMENTATION.md
-│   ├── INPUTS_DOCUMENTATION.md
-│   ├── LABELS_DOCUMENTATION.md
-│   ├── MISC_DOCUMENTATION.md
-│   └── STYLE_GUIDE.md         # Coding standards
-└── tests/                      # 🧪 Test documentation
-    ├── README.md
-    ├── QUICK_START_TESTS.md
-    └── ...
-```
-
-### 🎯 Benefits
-
-| Benefit | Description |
-|---------|-------------|
-| **Clearer Organization** | API documentation separated from general guides |
-| **Better Navigation** | Intuitive structure for developers |
-| **Professional Standards** | Follows industry conventions for API documentation |
-| **Easier Maintenance** | Logical grouping of related documentation |
-
----
-
-## [2.1.0] - 2025-07-27
-
-### 🏗️ Architecture
-
-| Component | Feature | Description |
-|-----------|---------|-------------|
-| **Project Reorganization** | Complete project restructuring | Better maintainability |
-| **Documentation Centralization** | Centralized documentation structure | Improved accessibility |
-| **Test Infrastructure** | Comprehensive test suite with 262 tests | Better code quality |
-
-### 🧪 Testing Infrastructure
-
-| Feature | Description | Impact |
-|---------|-------------|---------|
-| **Unit Tests** | Complete test coverage for all widgets | Better reliability |
-| **Test Organization** | Structured test hierarchy | Easier maintenance |
-| **Test Documentation** | Comprehensive test documentation | Better developer experience |
-
-### 📁 New File Structure
-
-```
-tests/
-├── __init__.py
-├── conftest.py              # Test configuration
-├── run_tests.py             # Test runner
-└── unit/                    # Unit tests
-    ├── test_button/         # Button widget tests
-    ├── test_input/          # Input widget tests
-    ├── test_label/          # Label widget tests
-    └── test_misc/           # Misc widget tests
-
-docs/
-├── README.md                # Main documentation
-├── QUICK_START_TESTS.md     # Test quick start guide
-├── STYLE_GUIDE.md          # Coding standards
-└── tests/                   # Test documentation
-    ├── README.md
-    ├── test_button_README.md
-    ├── test_input_README.md
-    ├── test_label_README.md
-    ├── test_misc_README.md
-    └── unit_README.md
-```
-
-### 🔧 Widget Improvements
-
-| Widget | Enhancement | Description |
-|--------|-------------|-------------|
-| **TabReplaceTextEdit** | Enhanced functionality | Better text editing capabilities |
-| **HoverLabel** | Improved hover detection | More responsive user interaction |
-| **OptionSelector** | Enhanced selection logic | Better user experience |
-| **ToggleSwitch** | Improved state management | More reliable operation |
-
-### 🎯 Benefits
-
-| Benefit | Description |
-|---------|-------------|
-| **Better Maintainability** | Organized project structure |
-| **Improved Testing** | Comprehensive test coverage |
-| **Enhanced Documentation** | Centralized and organized docs |
-| **Developer Experience** | Better development workflow |
-
----
-
-## [2.0.0] - 2025-07-27
-
-### 🚀 Major Update: PySide6 Migration
-
-| Feature | Description | Impact |
-|---------|-------------|---------|
-| **PySide6 6.9.1** | Migration from PyQt to PySide6 | Modern Qt framework |
-| **Enhanced Widgets** | All widgets updated for PySide6 compatibility | Better performance |
-| **Deployment Tools** | Improved build and deployment process | Easier distribution |
-
-### 🔧 Widget Enhancements
-
-| Widget | Enhancement | Description |
-|--------|-------------|-------------|
-| **DateButton** | Improved date handling | Better user experience |
-| **IconButton** | Enhanced icon support | More flexible usage |
-| **LoaderButton** | Better loading states | Improved feedback |
-| **AutoCompleteInput** | Enhanced autocomplete | Better suggestions |
-| **PasswordInput** | Improved security | Better password handling |
-| **SearchInput** | Enhanced search functionality | Better search experience |
-| **TabReplaceTextEdit** | Improved text editing | Better editing capabilities |
-| **ClickableTagLabel** | Enhanced click handling | Better interaction |
-| **FramedLabel** | Improved styling | Better appearance |
-| **HoverLabel** | Enhanced hover effects | Better user feedback |
-| **IndicatorLabel** | Improved indicators | Better status display |
-| **CircularTimer** | Enhanced timing | Better timer functionality |
-| **OptionSelector** | Improved selection | Better user choice |
-| **ToggleIcon** | Enhanced toggling | Better state management |
-| **ToggleSwitch** | Improved switching | Better user control |
-
-### 📦 Dependencies
-
-| Dependency | Version | Purpose |
-|------------|---------|---------|
-| **PySide6** | `>=6.9.1` | Modern Qt framework |
-| **Enhanced pyproject.toml** | Updated configuration | Better package management |
-
-### 🎯 Benefits
-
-| Benefit | Description |
-|---------|-------------|
-| **Modern Framework** | Latest Qt technology |
-| **Better Performance** | Improved widget performance |
-| **Enhanced Features** | More widget capabilities |
-| **Easier Deployment** | Streamlined distribution |
-
----
-
-## [1.0.9] - 2025-07-26
-
-### 🔧 OptionSelector Enhancement
-
-| Feature | Description | Impact |
-|---------|-------------|---------|
-| **ID-based Selection** | Added support for selection by ID | More flexible selection |
-| **Enhanced Properties** | New properties for ID-based selection | Better customization |
-
-### 🛠️ Technical Implementation
-
-| Component | Feature | Description |
-|-----------|---------|-------------|
-| **OptionSelector** | ID Selection Support | Added methods for ID-based item selection |
-| **Parameter Documentation** | Updated documentation | Better developer guidance |
-
----
-
-## [1.0.8] - 2025-07-26
-
-### 🎨 New Widget: ToggleSwitch
-
-| Feature | Description | Impact |
-|---------|-------------|---------|
-| **ToggleSwitch Widget** | New toggle switch component | Enhanced user interaction |
-| **Style Guide Integration** | Updated style guide with ToggleSwitch and ToggleIcon sections | Better documentation |
-
-### 📁 File Structure Changes
-
-```
-ezqt_widgets/misc/
-└── toggle_switch.py        # New ToggleSwitch widget
-
-STYLE_GUIDE.md              # Updated with new widget documentation
-```
-
----
-
-## [1.0.7] - 2025-07-26
-
-### 🔧 OptionSelector Enhancement
-
-| Feature | Description | Impact |
-|---------|-------------|---------|
-| **Custom Animation Duration** | Added customizable animation duration | Better user experience |
-| **Enhanced Parameters** | Improved parameter documentation | Better developer guidance |
-
----
-
-## [1.0.6] - 2025-07-25
-
-### 📝 Documentation Updates
-
-| Change | Description | Impact |
-|--------|-------------|---------|
-| **License Description** | Updated project description in license | Better legal clarity |
-| **MANIFEST.in** | Added STYLE_GUIDE.md to distribution | Better package distribution |
-
----
-
-## [1.0.5] - 2025-07-25
-
-### 🎨 New Widgets
-
-| Widget | Description | Impact |
-|--------|-------------|---------|
-| **ClickableTagLabel** | New clickable tag label widget | Enhanced user interaction |
-| **CircularTimer** | New circular timer widget | Better timing functionality |
-| **OptionSelector** | New option selector widget | Better selection interface |
-| **ToggleIcon** | New toggle icon widget | Enhanced visual feedback |
-
-### 🔄 Structural Changes
-
-| Component | Change | Details |
-|-----------|--------|---------|
-| **Package Reorganization** | Moved widgets to appropriate categories | Better organization |
-| **Removed Obsolete Widgets** | Cleaned up old widget implementations | Reduced complexity |
-
-### 📁 File Structure Changes
-
-```
-ezqt_widgets/
-├── label/
-│   └── clickable_tag_label.py  # New ClickableTagLabel widget
-└── misc/
-    ├── circular_timer.py       # New CircularTimer widget
-    ├── option_selector.py      # New OptionSelector widget
-    └── toggle_icon.py          # New ToggleIcon widget
-
-# Removed obsolete widgets:
-# - ezqt_widgets/loader/
-# - ezqt_widgets/toggle/
-```
-
----
-
-## [1.0.4] - 2025-07-25
-
-### 🎨 New Button Widgets
-
-| Widget | Description | Impact |
-|--------|-------------|---------|
-| **DateButton** | New date selection button | Better date input |
-| **LoaderButton** | New loading state button | Better user feedback |
-| **IconButton** | Enhanced icon button | Better visual design |
-
-### 📁 File Structure Changes
-
-```
-ezqt_widgets/button/
-├── date_button.py         # New DateButton widget
-├── icon_button.py         # Enhanced IconButton
-└── loader_button.py       # New LoaderButton widget
-```
-
----
-
-## [1.0.3] - 2025-07-24
-
-### 🎨 New Input Widgets
-
-| Widget | Description | Impact |
-|--------|-------------|---------|
-| **AutoCompleteInput** | New autocomplete input field | Better text input |
-| **PasswordInput** | New password input field | Secure password entry |
-| **SearchInput** | New search input field | Better search functionality |
-| **TabReplaceTextEdit** | Enhanced text editor | Better text editing |
-
-### 📚 Documentation
-
-| Feature | Description | Impact |
-|---------|-------------|---------|
-| **Style Guide** | New comprehensive style guide | Better development standards |
-| **Widget Documentation** | Detailed widget usage guide | Better developer experience |
-
-### 📁 File Structure Changes
-
-```
-ezqt_widgets/input/
-├── auto_complete_input.py     # New AutoCompleteInput widget
-├── password_input.py          # New PasswordInput widget
-├── search_input.py            # New SearchInput widget
-└── tab_replace_textedit.py    # Enhanced TabReplaceTextEdit
-
-STYLE_GUIDE.md                 # New comprehensive style guide
-```
-
----
-
-## [1.0.2] - 2025-07-24
-
-### 🔧 Label Widget Enhancements
-
-| Enhancement | Description | Impact |
-|-------------|-------------|---------|
-| **Advanced Icon Handling** | Enhanced icon support with SVG/URL | More flexible icons |
-| **Dynamic Padding** | Configurable padding options | Better layout control |
-| **Enable/Disable Support** | Widget state management | Better user control |
-| **Improved Comments** | Better code documentation | Enhanced maintainability |
-
----
-
-## [1.0.1] - 2025-07-24
-
-### 🔧 Label Widget Refactoring
-
-| Improvement | Description | Impact |
-|-------------|-------------|---------|
-| **Robustness** | Enhanced error handling | Better reliability |
-| **Documentation** | Improved docstrings | Better developer guidance |
-| **Icon Handling** | Better icon management | More reliable icon display |
-
----
-
-## [1.0.0] - 2025-07-24
-
-### 🏗️ Initial Release
-
-| Feature | Description | Impact |
-|---------|-------------|---------|
-| **Package Structure** | Initial package organization | Foundation for development |
-| **Basic Widgets** | Core widget implementations | Basic functionality |
-| **Documentation** | Initial documentation setup | Developer guidance |
-
-### 📁 Initial File Structure
-
-```
-ezqt_widgets/
-├── button/
-│   └── icon_button.py         # Icon button widget
-├── input/
-│   └── untab_textedit.py      # Text editor widget
-├── label/
-│   ├── framed_label.py        # Framed label widget
-│   ├── hover_label.py         # Hover label widget
-│   └── indicator_label.py     # Indicator label widget
-├── loader/
-│   └── circular_loader.py     # Circular loader widget
-└── toggle/
-    ├── clickable_tag_label.py # Clickable tag label
-    ├── toggle_label.py        # Toggle label widget
-    └── toggle_radio.py        # Toggle radio widget
-```
-
-### 📦 Initial Dependencies
-
-| Dependency | Purpose |
-|------------|---------|
-| **PyQt/PySide** | Qt framework for widgets |
-| **Basic Configuration** | Package setup and distribution |
-
----
-
-## [0.1.0] - 2025-07-24
-
-### 🚀 Project Initialization
-
-| Feature | Description | Impact |
-|---------|-------------|---------|
-| **Repository Setup** | Initial git repository | Version control foundation |
-| **Basic README** | Initial project documentation | Project overview |
-
-### 📁 Project Foundation
-
-```
-README.md                    # Initial project documentation
-```
-
-### 🎯 Benefits
-
-| Benefit | Description |
-|---------|-------------|
-| **Version Control** | Git repository for tracking changes |
-| **Documentation** | Basic project documentation |
-| **Foundation** | Base for future development | 
+| **Project Management** | Quick project overview: `ezqt info`

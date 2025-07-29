@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "EzQt_Widgets"
-version = "2.2.3.post1"
+version = "2.2.3.post3"
 description = "Une collection de widgets Qt personnalisés et réutilisables pour PySide6. Fournit des composants graphiques avancés, réutilisables et stylés pour faciliter le développement d'interfaces modernes et ergonomiques."
 readme = "README.md"
 requires-python = ">=3.9,<3.13"
@@ -28,9 +28,10 @@ classifiers = [
 ]
 
 dependencies = [
-    "PySide6>=6.9.1,<7.0.0",
+    "PySide6>=6.7.3,<7.0.0",
     "requests>=2.32.4",
-    "click>=8.2.1"
+    "click>=8.2.1",
+    "PyYAML>=6.0"
 ]
 
 [project.scripts]
@@ -72,4 +73,16 @@ where = ["."]
 include = ["ezqt_widgets", "ezqt_widgets.*"]
 
 [tool.setuptools.package-data]
-"*" = ["examples/*", "examples/bin/*", "examples/icons/*", "tests/*", "tests/unit/*", "tests/unit/*/*"]
+ezqt_widgets = [
+    "examples/*",
+    "examples/bin/*",
+    "examples/bin/icons/*",
+    "tests/*",
+    "tests/unit/*",
+    "tests/unit/*/*",
+    "docs/*",
+    "docs/api/*",
+    "docs/cli/*",
+    "docs/examples/*",
+    "docs/tests/*"
+]

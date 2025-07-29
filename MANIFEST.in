@@ -5,29 +5,10 @@ include LICENSE
 include MANIFEST.in
 
 # Documentation dans docs/
-include docs/README.md
+recursive-include docs *.md
 
-# Documentation de l'API
-include docs/api/README.md
-include docs/api/WIDGETS_DOCUMENTATION.md
-include docs/api/STYLE_GUIDE.md
-
-# Documentation des exemples
-include docs/examples/README.md
-
-# Documentation des tests
-include docs/tests/README.md
-include docs/tests/TESTS_DOCUMENTATION.md
-include docs/tests/QUICK_START_TESTS.md
-
-# Documentation CLI
-include docs/cli/README.md
-
-# Fichiers d'exemples
-include examples/*.py
-include examples/SUMMARY.md
-recursive-include examples/bin *
-recursive-include examples/icons *
+# Fichiers d'exemples - inclure tout le dossier examples
+recursive-include examples *
 
 # Fichiers de test
 include tests/run_tests.py
